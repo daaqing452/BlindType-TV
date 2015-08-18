@@ -9,7 +9,7 @@
     <Canvas>
         <Canvas Name="xKeyboardCanvas" Height="737" Width="400"/>
         <Canvas Name="xDrawCanvas" Height="737" Width="400" Canvas.Top="25"/>
-        <TextBox Name="xTextBox" Text="192.168.1.102" Height="20" Width="165" Canvas.Left="10" Canvas.Top="11"/>
+        <TextBox Name="xTextBox" Text="192.168.1.111" Height="20" Width="165" Canvas.Left="10" Canvas.Top="11"/>
         <Button Name="xSetupButton" Content="Setup" Click="xSetupButton_Click" Height="40" Width="70" Canvas.Top="36" Canvas.Left="10"/>
         <Button Name="xTesterButton" Content="Tester" Click="xTesterButton_Click" Height="40" Width="70" Canvas.Left="85" Canvas.Top="36"/>
         <Button Name="xPointVisibleButton" Content="Visible" Click="xPointVisibleButton_Click" Height="40" Width="75" Canvas.Left="160" Canvas.Top="36"/>

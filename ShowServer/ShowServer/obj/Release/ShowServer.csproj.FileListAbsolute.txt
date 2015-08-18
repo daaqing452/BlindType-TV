@@ -11,3 +11,4 @@ F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\R
 F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csproj.GenerateResource.Cache
 F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.exe
 F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.pdb
+F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csprojResolveAssemblyReference.cache

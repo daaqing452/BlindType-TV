@@ -41,8 +41,8 @@ namespace ShowServer
         public int deviceDragLen = 150;
 
         public List<PointAndTime> pointList = new List<PointAndTime>();
-        public List<String> optList = new List<String>();
-
+        public List<String> wordList = new List<String>();
+        
         public List<String> noticeList = new List<String>();
         String noticeNow;
         int noticeListIndex = -1;
@@ -59,20 +59,21 @@ namespace ShowServer
             NoticeChange();
         }
 
+
         public void AddPoint(int x, int y, DateTime t)
         {
             if (x != -100)
             {
-                optList.Add("a " + x + " " + y + " " + t.ToFileTime());
+                operationWrite("add " + x + " " + y + " " + t.ToFileTime());
             }
             else
             {
-                optList.Add("s");
+                operationWrite("space");
             }
             pointList.Add(new PointAndTime(x, y, t));
-            InputedRefresh();
             y += deviceYBias;
 
+            //  -------------------- animation --------------------
             Ellipse ellipse = new Ellipse();
             ellipse.Name = "e" + pointList.Count;
             ellipse.Width = 6;
@@ -107,19 +108,26 @@ namespace ShowServer
             storyboard.Children.Add(doubleAnimationEllipse);
             storyboard.Children.Add(doubleAnimationLabel);
             if (pointVisible == PointVisible.Flash) storyboard.Begin(this);
+            //  -------------------- animation --------------------
+
+            InputedRefresh();
         }
 
         public int BackSpace(bool fromClearPoints)
         {
             if (!fromClearPoints)
             {
-                optList.Add("b");
+                operationWrite("backspace");
             }
             if (pointList.Count == 0) return 0;
+
+            //  -------------------- animation --------------------
             this.UnregisterName("e" + pointList.Count);
             this.UnregisterName("l" + pointList.Count);
             pointList.RemoveAt(pointList.Count - 1);
             xDrawCanvas.Children.RemoveRange(xDrawCanvas.Children.Count - 2, 2);
+            //  -------------------- animation --------------------
+
             InputedRefresh();
             return pointList.Count;
         }
@@ -150,18 +158,7 @@ namespace ShowServer
             }
             writer0.WriteLine();
             writer0.Close();
-
-            StreamWriter writer1 = new StreamWriter(new FileStream("recordall-" + testerName + ".txt", FileMode.Append));
-            writer1.WriteLine("# " + noticeNow);
-            foreach (String str in optList)
-            {
-                writer1.WriteLine(str);
-            }
-            writer1.WriteLine("e");
-            writer1.WriteLine();
-            writer1.Close();
-            optList.Clear();
-
+            
             NoticeChange();
         }
 
@@ -258,6 +255,13 @@ namespace ShowServer
             }
         }
 
+        public void operationWrite(string operation)
+        {
+            StreamWriter writer1 = new StreamWriter(new FileStream("operation-" + testerName + ".txt", FileMode.Append));
+            writer1.WriteLine(operation);
+            writer1.Close();
+        }
+        
 
         private void xSetupButton_Click(object sender, RoutedEventArgs e)
         {
@@ -361,14 +365,14 @@ namespace ShowServer
         public Thread listenThread;
         public String ip;
 
-        public Server(String _ip)
+        public Server(String ip)
         {
-            ip = _ip;
+            this.ip = ip;
         }
 
-        public void Listen(MainWindow _mainWindow)
+        public void Listen(MainWindow mainWindow2)
         {
-            mainWindow = _mainWindow;
+            mainWindow = mainWindow2;
             tcpListener = new TcpListener(IPAddress.Parse(ip), 10309);
             listenThread = new Thread(ListenClient);
             listenThread.IsBackground = true;
@@ -436,7 +440,7 @@ namespace ShowServer
                     break;
                 case "dragend":
                     break;
-                case "click":
+                case "addpoint":
                     mainWindow.AddPoint(Int32.Parse(strs[1]), Int32.Parse(strs[2]), DateTime.Now);
                     break;
                 case "backspace":
