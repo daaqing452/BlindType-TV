@@ -1,0 +1,16 @@
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\bin\Release\EyesFreeTextEntryServer2.exe.config
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\bin\Release\EyesFreeTextEntryServer2.exe
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\bin\Release\EyesFreeTextEntryServer2.pdb
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2.csprojResolveAssemblyReference.cache
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\MainWindow.baml
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\MainWindow.g.cs
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\App.g.cs
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2_MarkupCompile.cache
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2.g.resources
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2.Properties.Resources.resources
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2.csproj.GenerateResource.Cache
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2.exe
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer2\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2.pdb
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer\EyesFreeTextEntryServer2\bin\Release\EyesFreeTextEntryServer2.exe.config
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2.exe
+L:\Eyes-Free Text Entry\Demo2\EyesFreeTextEntryServer\EyesFreeTextEntryServer2\obj\Release\EyesFreeTextEntryServer2.pdb

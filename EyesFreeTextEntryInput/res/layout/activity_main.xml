@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <TextView
+        android:id="@+id/infoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:maxWidth="200dp"
+        android:minHeight="50dp"
+        android:text="Hello"
+        android:width="300dp" />
+
+    <EditText
+        android:id="@+id/ipEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/infoTextView"
+        android:layout_below="@+id/infoTextView"
+        android:layout_marginLeft="23dp"
+        android:ems="10"
+        android:minWidth="150dp"
+        android:text="192.168.1.103" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/okButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ipEditText"
+        android:layout_alignBottom="@+id/ipEditText"
+        android:layout_alignParentRight="true"
+        android:minHeight="60dp"
+        android:minWidth="100dp"
+        android:text="OK" />
+
+</RelativeLayout>
