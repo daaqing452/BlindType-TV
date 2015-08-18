@@ -1,4 +1,4 @@
-package com.example.eftei;
+package touchInput;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
 	};
 	
 	final int HOLDDOWN_TIME = 500;
-	final int HOLDDOWN_DIST = 60;
+	final int STAY_DIST = 60;
 	final int SLIP_DIST = 80;
 	
 	final int MODE_NONE = 0;
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 	final int MODE_DRAG = 2;
 	
 	int n;
-	ArrayList<OnePointTouch> opta = new ArrayList<OnePointTouch>();
+	ArrayList<TouchEvent> touchEventList = new ArrayList<TouchEvent>();
 	int moveX = 0, moveY = 0;
 	int mode = 0;
 	
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
 		
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
-			opta.add(new OnePointTouch(x, y));
+			touchEventList.add(new TouchEvent(x, y));
 			mode = MODE_CLICK;
 			break;
 			
@@ -104,27 +104,30 @@ public class MainActivity extends Activity {
 		
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
-			OnePointTouch opt = opta.get(n);
+			TouchEvent touchEvent = touchEventList.get(n);
 			switch (mode) {
 			case MODE_CLICK:
 				//	point
-				if (Math.abs(opt.downX - x) < HOLDDOWN_DIST && Math.abs(opt.downY - y) < HOLDDOWN_DIST) {
-					int midx = (x + opt.downX) / 2;
-					int midy = (y + opt.downY) / 2;
-					printWriter.write("addpoint " + midx + " " + midy + "\n");
+				if (ifStay(touchEvent.downX, touchEvent.downY, x, y)) {
+					int midx = (x + touchEvent.downX) / 2;
+					int midy = (y + touchEvent.downY) / 2;
+					printWriter.write("click " + midx + " " + midy + "\n");
 					printWriter.flush();
 				}
-				//	left flick
-				if (x < opt.downX - SLIP_DIST) {
+				
+				//	left slip
+				if (x < touchEvent.downX - SLIP_DIST) {
 					printWriter.write("backspace\n");
 					printWriter.flush();
 				}
-				//	right flick
-				if (x > opt.downX + SLIP_DIST) {
+				
+				//	right slip
+				if (x > touchEvent.downX + SLIP_DIST) {
 					printWriter.write("space\n");
 					printWriter.flush();
 				}
 				break;
+				
 			case MODE_DRAG:
 				//	drag
 				printWriter.write("dragend " + x + " " + y + "\n");
@@ -132,25 +135,25 @@ public class MainActivity extends Activity {
 				break;
 			}
 			mode = MODE_NONE;
-			opt.cancel();
-			opta.remove(n);
+			touchEvent.cancel();
+			touchEventList.remove(n);
 			break;
 		}
 		
 		return super.onTouchEvent(event);
 	}
 	
-	class OnePointTouch {
+	class TouchEvent {
 		public int downX, downY;
 		public Timer dragTimer;
 		
-		public OnePointTouch(int _downX, int _downY) {
-			downX = _downX;
-			downY = _downY;
+		public TouchEvent(int downX2, int downY2) {
+			downX = downX2;
+			downY = downY2;
 			dragTimer = new Timer();
 			dragTimer.schedule(new TimerTask() {
 				public void run() {
-					if (Math.abs(moveX - downX) < HOLDDOWN_DIST && Math.abs(moveY - downY) < HOLDDOWN_DIST) {
+					if (ifStay(moveX, moveY, downX, downY)) {
 						mode = MODE_DRAG;
 						printWriter.write("dragbegin " + moveX + " " + moveY + "\n");
 						printWriter.flush();
@@ -183,5 +186,9 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(String string) {
 			infoTextView.setText(string);
 		}
+	}
+	
+	boolean ifStay(int x0, int y0, int x1, int y1) {
+		return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2)) < STAY_DIST;
 	}
 }

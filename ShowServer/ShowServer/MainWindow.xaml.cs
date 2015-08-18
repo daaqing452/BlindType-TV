@@ -436,7 +436,7 @@ namespace ShowServer
                     break;
                 case "dragend":
                     break;
-                case "addpoint":
+                case "click":
                     mainWindow.AddPoint(Int32.Parse(strs[1]), Int32.Parse(strs[2]), DateTime.Now);
                     break;
                 case "backspace":
