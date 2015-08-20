@@ -17,16 +17,12 @@ namespace ShowServer
     public partial class MainWindow : Window
     {
         public enum PointVisible    { Visible, Flash, Unvisible };
-        public enum KeyboardVisible { Keyboard, NoKeyboard };
-        public enum LengthCheck     { Check, NoCheck };
-        public enum TypeChar        { TypeLetter, TypeStar };
+        public enum KeyboardVisible { KeyboardOn, KeyboardOff };
 
         public Server server;
         public string testerName;
         public PointVisible     pointVisible    = PointVisible.Visible;
-        public KeyboardVisible  keyboardVisible = KeyboardVisible.Keyboard;
-        public LengthCheck      lengthCheck     = LengthCheck.Check;
-        public TypeChar         typeChar        = TypeChar.TypeLetter;
+        public KeyboardVisible  keyboardVisible = KeyboardVisible.KeyboardOn;
         
         public int deviceHeight;
         public int deviceWidth;
@@ -179,12 +175,6 @@ namespace ShowServer
 
         public void Confirm()
         {
-            if (lengthCheck == LengthCheck.Check && pointList.Count() != noticeNow.Count())
-            {
-                MessageBox.Show("Expect length: " + noticeNow.Count());
-                return;
-            }
-
             StreamWriter writer0 = new StreamWriter(new FileStream("record-" + testerName + ".txt", FileMode.Append));
             writer0.WriteLine(noticeNow);
             for (int i = 0; i < pointList.Count; ++i)
@@ -205,12 +195,12 @@ namespace ShowServer
 
         public void AddKeyboardUi()
         {
-            int keySize = 70;
+            int keySize = 100;
             int keySize2 = keySize - 1;
             int fontSize = keySize / 2 + 1;
             String[] keyLayout = { "QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM" };
-            int[] wOffset = { 9, 9 + keySize / 4, 9 + keySize * 3 / 4 };
-            int hOffset = 320;
+            int[] wOffset = { 150, 150 + keySize / 4, 150 + keySize * 3 / 4 };
+            int hOffset = 33;
 
             for (int r = 0; r < keyLayout.Count(); ++r)
             {
@@ -229,7 +219,7 @@ namespace ShowServer
                     label.Foreground = new SolidColorBrush(Color.FromRgb(104, 104, 104));
                     label.Height = keySize;
                     label.Width = keySize;
-                    label.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
+                    label.HorizontalContentAlignment = HorizontalAlignment.Center;
                     label.Content = keyLayout[r][c];
                     Canvas.SetTop(label, hOffset + r * keySize2);
                     Canvas.SetLeft(label, wOffset[r] + c * keySize2);
@@ -290,13 +280,6 @@ namespace ShowServer
                 xInputedTextBlock.Text += "*";
             }
             xInputedTextBlock.Text += "|";
-            if (typeChar == TypeChar.TypeStar)
-            {
-                for (char ch = 'a'; ch <= 'z'; ++ch)
-                {
-                    xInputedTextBlock.Text = xInputedTextBlock.Text.Replace(ch, '*');
-                }
-            }
         }
 
         public void operationWrite(string operation)
@@ -305,19 +288,32 @@ namespace ShowServer
             writer1.WriteLine(operation);
             writer1.Close();
         }
-        
+
+  
+        private void xSettingButton_Click(object sender, RoutedEventArgs e)
+        {
+            Visibility visibility = (xIPTextBox.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+            xIPTextBox.Visibility = visibility;
+            xTesterTextBox.Visibility = visibility;
+            xSetupButton.Visibility = visibility;
+            xTesterButton.Visibility = visibility;
+            xPointVisibleButton.Visibility = visibility;
+            xKeyboardButton.Visibility = visibility;
+            xNoticeChangeButton.Visibility = visibility;
+            xRestartButton.Visibility = visibility;
+        }
 
         private void xSetupButton_Click(object sender, RoutedEventArgs e)
         {
             if (server != null) return;
-            server = new Server(xTextBox.Text);
+            server = new Server(xIPTextBox.Text);
             server.Listen(this);
             MessageBox.Show("Server setup!");
         }
 
         private void xTesterButton_Click(object sender, RoutedEventArgs e)
         {
-            testerName = xTextBox.Text;
+            testerName = xTesterTextBox.Text;
             MessageBox.Show("Tester's name: " + testerName);
         }
 
@@ -347,32 +343,18 @@ namespace ShowServer
         {
             switch (keyboardVisible)
             {
-                case KeyboardVisible.Keyboard:
-                    keyboardVisible = KeyboardVisible.NoKeyboard;
+                case KeyboardVisible.KeyboardOn:
+                    keyboardVisible = KeyboardVisible.KeyboardOff;
                     break;
-                case KeyboardVisible.NoKeyboard:
-                    keyboardVisible = KeyboardVisible.Keyboard;
+                case KeyboardVisible.KeyboardOff:
+                    keyboardVisible = KeyboardVisible.KeyboardOn;
                     break;
             }
             xKeyboardButton.Content = keyboardVisible;
             foreach (UIElement uiElement in xKeyboardCanvas.Children)
             {
-                uiElement.Visibility = (keyboardVisible == KeyboardVisible.Keyboard) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
+                uiElement.Visibility = (keyboardVisible == KeyboardVisible.KeyboardOn) ? Visibility.Visible : Visibility.Hidden;
             }
-        }
-
-        private void xLengthCheckButton_Click(object sender, RoutedEventArgs e)
-        {
-            switch (lengthCheck)
-            {
-                case LengthCheck.Check:
-                    lengthCheck = LengthCheck.NoCheck;
-                    break;
-                case LengthCheck.NoCheck:
-                    lengthCheck = LengthCheck.Check;
-                    break;
-            }
-            xLengthCheckButton.Content = lengthCheck;
         }
 
         private void xNoticeChangeButton_Click(object sender, RoutedEventArgs e)
@@ -384,21 +366,6 @@ namespace ShowServer
         {
             noticeListIndex = -1;
             NoticeChange();
-        }
-
-        private void xTypeCharButton_Click(object sender, RoutedEventArgs e)
-        {
-            switch (typeChar)
-            {
-                case TypeChar.TypeLetter:
-                    typeChar = TypeChar.TypeStar;
-                    break;
-                case TypeChar.TypeStar:
-                    typeChar = TypeChar.TypeLetter;
-                    break;
-            }
-            xTypeCharButton.Content = typeChar;
-            InputedRefresh();
         }
     }
 
