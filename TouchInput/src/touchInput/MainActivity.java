@@ -117,13 +117,13 @@ public class MainActivity extends Activity {
 				
 				//	left slip
 				if (x < touchEvent.downX - SLIP_DIST) {
-					printWriter.write("backspace\n");
+					printWriter.write("leftslip\n");
 					printWriter.flush();
 				}
 				
 				//	right slip
 				if (x > touchEvent.downX + SLIP_DIST) {
-					printWriter.write("space\n");
+					printWriter.write("rightslip\n");
 					printWriter.flush();
 				}
 				break;

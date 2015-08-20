@@ -4,18 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
@@ -23,33 +16,35 @@ namespace ShowServer
 {
     public partial class MainWindow : Window
     {
-        public enum PointVisible { Visible, Flash, Unvisible };
+        public enum PointVisible    { Visible, Flash, Unvisible };
         public enum KeyboardVisible { Keyboard, NoKeyboard };
-        public enum LengthCheck { Check, NoCheck };
-        public enum TypeChar { TypeLetter, TypeStar };
+        public enum LengthCheck     { Check, NoCheck };
+        public enum TypeChar        { TypeLetter, TypeStar };
 
         public Server server;
-        public String testerName;
-        public PointVisible pointVisible = PointVisible.Visible;
-        public KeyboardVisible keyboardVisible = KeyboardVisible.Keyboard;
-        public LengthCheck lengthCheck = LengthCheck.Check;
-        public TypeChar typeChar = TypeChar.TypeLetter;
-
-        public int deviceWidth, deviceHeight;
+        public string testerName;
+        public PointVisible     pointVisible    = PointVisible.Visible;
+        public KeyboardVisible  keyboardVisible = KeyboardVisible.Keyboard;
+        public LengthCheck      lengthCheck     = LengthCheck.Check;
+        public TypeChar         typeChar        = TypeChar.TypeLetter;
+        
+        public int deviceHeight;
+        public int deviceWidth;
+        public int deviceYBias;
         public double deviceResize = 1;
-        public int deviceYBias = 0;
         public int deviceDragLen = 150;
 
-        public List<PointAndTime> pointList = new List<PointAndTime>();
+        public List<UltraPoint> pointList = new List<UltraPoint>();
         public List<String> wordList = new List<String>();
         
         public List<String> noticeList = new List<String>();
-        String noticeNow;
+        string noticeNow;
         int noticeListIndex = -1;
 
         public Point dragStart;
         public Label dragFocusLabel;
 
+        Recognition recongition = new Recognition();
 
         public MainWindow()
         {
@@ -60,17 +55,10 @@ namespace ShowServer
         }
 
 
-        public void AddPoint(int x, int y, DateTime t)
+        public void Click(int x, int y, DateTime t)
         {
-            if (x != -100)
-            {
-                operationWrite("add " + x + " " + y + " " + t.ToFileTime());
-            }
-            else
-            {
-                operationWrite("space");
-            }
-            pointList.Add(new PointAndTime(x, y, t));
+            operationWrite("add " + x + " " + y + " " + t.ToFileTime());
+            pointList.Add(new UltraPoint(x, y, t));
             y += deviceYBias;
 
             //  -------------------- animation --------------------
@@ -93,8 +81,8 @@ namespace ShowServer
             Canvas.SetTop(label, y / deviceResize - 5);
             xDrawCanvas.Children.Add(label);
 
-            this.RegisterName(ellipse.Name, ellipse);
-            this.RegisterName(label.Name, label);
+            RegisterName(ellipse.Name, ellipse);
+            RegisterName(label.Name, label);
             DoubleAnimation doubleAnimationEllipse = new DoubleAnimation();
             DoubleAnimation doubleAnimationLabel = new DoubleAnimation();
             doubleAnimationEllipse.From = doubleAnimationLabel.From = 1.0;
@@ -113,17 +101,17 @@ namespace ShowServer
             InputedRefresh();
         }
 
-        public int BackSpace(bool fromClearPoints)
+        public int LeftSlip(bool userEvent)
         {
-            if (!fromClearPoints)
+            if (userEvent)
             {
                 operationWrite("backspace");
             }
             if (pointList.Count == 0) return 0;
 
             //  -------------------- animation --------------------
-            this.UnregisterName("e" + pointList.Count);
-            this.UnregisterName("l" + pointList.Count);
+            UnregisterName("e" + pointList.Count);
+            UnregisterName("l" + pointList.Count);
             pointList.RemoveAt(pointList.Count - 1);
             xDrawCanvas.Children.RemoveRange(xDrawCanvas.Children.Count - 2, 2);
             //  -------------------- animation --------------------
@@ -132,9 +120,61 @@ namespace ShowServer
             return pointList.Count;
         }
 
-        public void ClearPoints()
+        public void DragBegin(int x, int y)
         {
-            while (BackSpace(true) > 0) ;
+            int appearIndex = (new Random()).Next() % 9 + 3;
+            dragStart = new Point(x, y);
+            for (int i = 0; i < 5; ++i)
+                for (int j = 0; j < 3; ++j)
+                {
+                    Label label = new Label();
+                    label.Width = 125;
+                    label.Height = 55;
+                    label.FontSize = 30;
+                    label.Content = "";
+                    /**/
+                    int[] nia = { 11, 9, 12, 5, 1, 6, 3, 0, 4, 7, 2, 8, 13, 10, 14 };
+                    int ni = nia[i * 3 + j];
+                    label.Content = i + j;
+                    /**/
+                    Canvas.SetTop(label, 300 + i * 60);
+                    Canvas.SetLeft(label, 7 + j * 130);
+                    xChooseCanvas.Children.Add(label);
+                }
+            xChooseCanvas.Background = Brushes.Ivory;
+            Drag(x, y);
+        }
+        
+        public void Drag(int x, int y)
+        {
+            int focusX = Convert.ToInt32((x - dragStart.X) / deviceDragLen);
+            int focusY = Convert.ToInt32((y - dragStart.Y) / deviceDragLen);
+            focusX = Math.Min(Math.Max(focusX, -1), 1) + 1;
+            focusY = Math.Min(Math.Max(focusY, -2), 2) + 2;
+            int Count = 0;
+            foreach (UIElement uiElement in xChooseCanvas.Children)
+            {
+                Label label = uiElement as Label;
+                if (Count == focusY * 3 + focusX)
+                {
+                    dragFocusLabel = label;
+                    label.Background = Brushes.Coral;
+                }
+                else
+                {
+                    label.Background = Brushes.PaleTurquoise;
+                }
+                Count++;
+            }
+        }
+
+        public void DragEnd(int x, int y)
+        {
+            Drag(x, y);
+            xChooseCanvas.Background = null;
+            xChooseCanvas.Children.Clear();
+            //InputedText += dragFocusLabel.Content;
+            //ClearPoints();
         }
 
         public void Confirm()
@@ -169,7 +209,7 @@ namespace ShowServer
             int keySize2 = keySize - 1;
             int fontSize = keySize / 2 + 1;
             String[] keyLayout = { "QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM" };
-            int[] wOffset = { 9, 9 + keySize / 2, 9 + keySize };
+            int[] wOffset = { 9, 9 + keySize / 4, 9 + keySize * 3 / 4 };
             int hOffset = 320;
 
             for (int r = 0; r < keyLayout.Count(); ++r)
@@ -203,7 +243,7 @@ namespace ShowServer
             StreamReader reader = new StreamReader(new FileStream("PhraseSets/phrases2.txt", FileMode.Open));
             while (true)
             {
-                String line = reader.ReadLine();
+                string line = reader.ReadLine();
                 if (line == null) break;
                 line = line.ToLower();
                 noticeList.Add(line);
@@ -213,7 +253,11 @@ namespace ShowServer
 
         public void NoticeChange()
         {
-            ClearPoints();
+            while (pointList.Count() > 0)
+            {
+                LeftSlip(false);
+            }
+            wordList.Clear();
             noticeListIndex = (noticeListIndex + 1) % noticeList.Count();
             noticeNow = noticeList[noticeListIndex];
             xNoticeTextBlock.Text = noticeListIndex.ToString() + ": " + noticeNow;
@@ -363,11 +407,11 @@ namespace ShowServer
         public MainWindow mainWindow;
         public TcpListener tcpListener;
         public Thread listenThread;
-        public String ip;
+        public string ip;
 
-        public Server(String ip)
+        public Server(string ip2)
         {
-            this.ip = ip;
+            ip = ip2;
         }
 
         public void Listen(MainWindow mainWindow2)
@@ -404,16 +448,16 @@ namespace ShowServer
             }
         }
 
-        public delegate void BeginInvokeDelegate(String str);
-        public void BeginInvokeMethod(String str)
+        public delegate void BeginInvokeDelegate(string str);
+        public void BeginInvokeMethod(string str)
         {
             Console.WriteLine(str);
             String[] strs = str.Split(' ');
             switch (strs[0])
             {
                 case "devicesize":
-                    mainWindow.deviceWidth = Int32.Parse(strs[1]);
-                    mainWindow.deviceHeight = Int32.Parse(strs[2]);
+                    mainWindow.deviceWidth = int.Parse(strs[1]);
+                    mainWindow.deviceHeight = int.Parse(strs[2]);
                     switch (mainWindow.deviceWidth)
                     {
                         case 1080:
@@ -434,23 +478,19 @@ namespace ShowServer
                     }
                     break;
                 case "dragbegin":
-                    mainWindow.Confirm();
+                    mainWindow.DragBegin(int.Parse(strs[1]), int.Parse(strs[2]));
                     break;
                 case "drag":
+                    mainWindow.Drag(int.Parse(strs[1]), int.Parse(strs[2]));
                     break;
                 case "dragend":
+                    mainWindow.DragEnd(int.Parse(strs[1]), int.Parse(strs[2]));
                     break;
-                case "addpoint":
-                    mainWindow.AddPoint(Int32.Parse(strs[1]), Int32.Parse(strs[2]), DateTime.Now);
+                case "click":
+                    mainWindow.Click(int.Parse(strs[1]), int.Parse(strs[2]), DateTime.Now);
                     break;
-                case "backspace":
-                    mainWindow.BackSpace(false);
-                    break;
-                case "clearpoints":
-                    mainWindow.ClearPoints();
-                    break;
-                case "space":
-                    mainWindow.AddPoint(-100, -100, DateTime.Now);
+                case "leftslip":
+                    mainWindow.LeftSlip(true);
                     break;
                 default:
                     break;
@@ -458,15 +498,17 @@ namespace ShowServer
         }
     }
 
-    public class PointAndTime
+    public class UltraPoint
     {
         public int x, y;
         public DateTime t;
-        public PointAndTime(int _x, int _y, DateTime _t)
+        public Ellipse ellipse;
+        public Label label;
+        public UltraPoint(int x2, int y2, DateTime t2)
         {
-            x = _x;
-            y = _y;
-            t = _t;
+            x = x2;
+            y = y2;
+            t = t2;
         }
     }
 }
