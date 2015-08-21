@@ -5,25 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ShowServer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1300">
-    <Canvas Background="#333333">
-        <Canvas Name="xKeyboardCanvas" Height="368" Width="1292" Canvas.Top="369"/>
-        <Canvas Name="xDrawCanvas" Height="737" Width="400" Canvas.Top="25"/>
-        <Canvas Name="xChooseCanvas" Height="306" Width="305" Canvas.Left="10" Canvas.Top="260"/>
+        Title="Quaternion" Height="768" Width="1300">
+    <Canvas>
+        <Canvas Name="xKeyboardCanvas"  Height="300" Width="1305" Canvas.Top="447"/>
+        <Canvas Name="xDragCanvas"      Height="300" Width="1305" Canvas.Top="447"/>
+        <Canvas Name="xPointCanvas"     Height="300" Width="1305" Canvas.Top="447"/>
+        <Line X1="0" Y1="514" X2="1305" Y2="514" Stroke="#555555"></Line>
 
-        <TextBox Name="xIPTextBox"      Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Text="192.168.1.111"    Height="20" Width="165" Canvas.Left="1032" Canvas.Top="10"/>
-        <TextBox Name="xTesterTextBox"  Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Text="User"             Height="20" Width="165" Canvas.Left="1032" Canvas.Top="35"/>
+        <TextBox Name="xIPTextBox"      Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="192.168.1.111"    Height="20" Width="165" Canvas.Left="1032" Canvas.Top="527"/>
+        <TextBox Name="xTesterTextBox"  Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="User"             Height="20" Width="165" Canvas.Left="1032" Canvas.Top="552"/>
+        <Button Name="xSettingButton"       Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Setting"   Click="xSettingButton_Click"        Height="45" Width="80" Canvas.Left="1202" Canvas.Top="678"/>
+        <Button Name="xSetupButton"         Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Setup"     Click="xSetupButton_Click"          Height="45" Width="80" Canvas.Left="1032" Canvas.Top="578"/>
+        <Button Name="xTesterButton"        Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Tester"    Click="xTesterButton_Click"         Height="45" Width="80" Canvas.Left="1117" Canvas.Top="578"/>
+        <Button Name="xPointVisibleButton"  Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Visible"   Click="xPointVisibleButton_Click"   Height="45" Width="80" Canvas.Left="1032" Canvas.Top="628"/>
+        <Button Name="xKeyboardButton"      Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Keyboard"  Click="xKeyboardButton_Click"       Height="45" Width="80" Canvas.Left="1117" Canvas.Top="628"/>
+        <Button Name="xNoticeChangeButton"  Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Change"    Click="xNoticeChangeButton_Click"   Height="45" Width="80" Canvas.Left="1032" Canvas.Top="678"/>
+        <Button Name="xRestartButton"       Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Restart"   Click="xRestartButton_Click"        Height="45" Width="80" Canvas.Left="1117" Canvas.Top="678"/>
 
-        <Button Name="xSettingButton"       Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Content="Setting"   Click="xSettingButton_Click"        Height="45" Width="80" Canvas.Left="1202" Canvas.Top="10"/>
-        <Button Name="xSetupButton"         Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Content="Setup"     Click="xSetupButton_Click"          Height="45" Width="80" Canvas.Left="1032" Canvas.Top="61"/>
-        <Button Name="xTesterButton"        Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Content="Tester"    Click="xTesterButton_Click"         Height="45" Width="80" Canvas.Left="1117" Canvas.Top="61"/>
-        <Button Name="xPointVisibleButton"  Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Content="Visible"   Click="xPointVisibleButton_Click"   Height="45" Width="80" Canvas.Left="1032" Canvas.Top="111"/>
-        <Button Name="xKeyboardButton"      Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Content="Keyboard"  Click="xKeyboardButton_Click"       Height="45" Width="80" Canvas.Left="1117" Canvas.Top="111"/>
-        <Button Name="xNoticeChangeButton"  Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Content="Change"    Click="xNoticeChangeButton_Click"   Height="45" Width="80" Canvas.Left="1032" Canvas.Top="161"/>
-        <Button Name="xRestartButton"       Background="#333333" BorderBrush="#888888" Foreground="#dddddd" Content="Restart"   Click="xRestartButton_Click"        Height="45" Width="80" Canvas.Left="1117" Canvas.Top="161"/>
-
-        <TextBlock Name="xNoticeTextBlock"  Background="#333333"  TextWrapping="Wrap" Foreground="#dddddd" FontSize="30" Height="40" Width="1272" Canvas.Left="10" Canvas.Top="284"/>
-        <TextBlock Name="xInputedTextBlock" Background="#333333"  TextWrapping="Wrap" Foreground="#dddddd" FontSize="30" Height="40" Width="1272" Canvas.Left="10" Canvas.Top="329"/>
-        <Line X1="0" Y1="100" X2="1300" Y2="100"/>
+        <TextBlock Name="xNoticeTextBlock"  Background="#ffffee" TextWrapping="Wrap" FontSize="30" Height="40" Width="680" Canvas.Top="224" Canvas.Left="313"/>
+        <TextBox   Name="xInputedTextBlock" TextWrapping="Wrap" FontSize="30" Height="40" Width="680" Canvas.Top="289" Canvas.Left="313"/>
     </Canvas>
 </Window>

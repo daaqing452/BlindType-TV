@@ -24,7 +24,7 @@ namespace ShowServer
         public void LoadLanguageModel()
         {
             languageModel = new Dictionary<string, double>();
-            StreamReader reader = new StreamReader("Model/ANC-all-count.txt");
+            StreamReader reader = new StreamReader("../../../Model/ANC-all-count.txt");
             while (true)
             {
                 string line = reader.ReadLine();
@@ -39,7 +39,7 @@ namespace ShowServer
         public void LoadAbsoluteLetterModel()
         {
             absoluteLetterKeycloud = new Keycloud[26];
-            StreamReader reader = new StreamReader("Model/Absolute-General-Letter.txt");
+            StreamReader reader = new StreamReader("../../../Model/Absolute-General-Letter.txt");
             while (true)
             {
                 string line = reader.ReadLine();

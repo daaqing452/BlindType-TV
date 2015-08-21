@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
@@ -23,142 +24,109 @@ namespace ShowServer
         public string testerName;
         public PointVisible     pointVisible    = PointVisible.Visible;
         public KeyboardVisible  keyboardVisible = KeyboardVisible.KeyboardOn;
-        
-        public int deviceHeight;
-        public int deviceWidth;
-        public int deviceYBias;
-        public double deviceResize = 1;
-        public int deviceDragLen = 150;
+        public ImageBrush TEXT_ENTRY_BACKGROUND = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry-background.png", UriKind.Relative)));
 
-        public List<UltraPoint> pointList = new List<UltraPoint>();
-        public List<String> wordList = new List<String>();
-        
         public List<String> noticeList = new List<String>();
         string noticeNow;
         int noticeListIndex = -1;
 
+        public const int DRAG_ROW = 5;
+        public const int DRAG_COLUMN = 5;
+        public const int DRAG_LEN_X = 50;
+        public const int DRAG_LEN_Y = 30;
+        public bool draging = false;
         public Point dragStart;
         public Label dragFocusLabel;
 
+        public List<UltraPoint> pointList = new List<UltraPoint>();
+        public List<String> wordList = new List<String>();
         Recognition recongition = new Recognition();
 
         public MainWindow()
         {
             InitializeComponent();
+            Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/background.png", UriKind.Relative)));
+            xKeyboardCanvas.Background = TEXT_ENTRY_BACKGROUND;
+            
             AddKeyboardUi();
             NoticeLoad();
             NoticeChange();
+            //DragBegin(1, 1);
         }
 
 
         public void Click(int x, int y, DateTime t)
         {
-            operationWrite("add " + x + " " + y + " " + t.ToFileTime());
+            OperationWrite("add " + x + " " + y + " " + t.ToFileTime());
             pointList.Add(new UltraPoint(x, y, t));
-            y += deviceYBias;
+            UpdateTextEntry();
 
             //  -------------------- animation --------------------
-            Ellipse ellipse = new Ellipse();
-            ellipse.Name = "e" + pointList.Count;
-            ellipse.Width = 6;
-            ellipse.Height = 6;
-            ellipse.Stroke = Brushes.Indigo;
-            ellipse.Fill = Brushes.Blue;
-            if (pointVisible == PointVisible.Unvisible) ellipse.Opacity = 0.0;
-            Canvas.SetLeft(ellipse, x / deviceResize - 3);
-            Canvas.SetTop(ellipse, y / deviceResize - 3);
-            xDrawCanvas.Children.Add(ellipse);
-
-            Label label = new Label();
-            label.Name = "l" + pointList.Count;
-            label.Content = pointList.Count.ToString();
-            if (pointVisible == PointVisible.Unvisible) label.Opacity = 0.0;
-            Canvas.SetLeft(label, x / deviceResize - 3);
-            Canvas.SetTop(label, y / deviceResize - 5);
-            xDrawCanvas.Children.Add(label);
-
-            RegisterName(ellipse.Name, ellipse);
-            RegisterName(label.Name, label);
-            DoubleAnimation doubleAnimationEllipse = new DoubleAnimation();
-            DoubleAnimation doubleAnimationLabel = new DoubleAnimation();
-            doubleAnimationEllipse.From = doubleAnimationLabel.From = 1.0;
-            doubleAnimationEllipse.To = doubleAnimationLabel.To = 0.0;
-            doubleAnimationEllipse.Duration = doubleAnimationLabel.Duration = new Duration(TimeSpan.FromSeconds(0.5));
+            Image image = new Image();
+            image.Source = (ImageSource)new ImageSourceConverter().ConvertFromString("../../../Image/point.png");
+            image.Name = "i" + pointList.Count;
+            if (pointVisible == PointVisible.Unvisible) image.Opacity = 0.0;
+            Canvas.SetLeft(image, x / 1.2 + 300);
+            Canvas.SetTop(image, (y - 510) / 2.8);
+            xPointCanvas.Children.Add(image);
+            RegisterName(image.Name, image);
+            DoubleAnimation doubleAnimationImage = new DoubleAnimation();
+            doubleAnimationImage.From = 1.0;
+            doubleAnimationImage.To = 0.0;
+            doubleAnimationImage.Duration = new Duration(TimeSpan.FromSeconds(0.5));
             Storyboard storyboard = new Storyboard();
-            Storyboard.SetTargetName(doubleAnimationEllipse, ellipse.Name);
-            Storyboard.SetTargetProperty(doubleAnimationEllipse, new PropertyPath(Ellipse.OpacityProperty));
-            Storyboard.SetTargetName(doubleAnimationLabel, label.Name);
-            Storyboard.SetTargetProperty(doubleAnimationLabel, new PropertyPath(Label.OpacityProperty));
-            storyboard.Children.Add(doubleAnimationEllipse);
-            storyboard.Children.Add(doubleAnimationLabel);
+            Storyboard.SetTargetName(doubleAnimationImage, image.Name);
+            Storyboard.SetTargetProperty(doubleAnimationImage, new PropertyPath(OpacityProperty));
+            storyboard.Children.Add(doubleAnimationImage);
             if (pointVisible == PointVisible.Flash) storyboard.Begin(this);
             //  -------------------- animation --------------------
-
-            InputedRefresh();
         }
 
         public int LeftSlip(bool userEvent)
         {
             if (userEvent)
             {
-                operationWrite("backspace");
+                OperationWrite("backspace");
             }
             if (pointList.Count == 0) return 0;
 
             //  -------------------- animation --------------------
-            UnregisterName("e" + pointList.Count);
-            UnregisterName("l" + pointList.Count);
-            pointList.RemoveAt(pointList.Count - 1);
-            xDrawCanvas.Children.RemoveRange(xDrawCanvas.Children.Count - 2, 2);
+            UnregisterName("i" + pointList.Count);
+            xPointCanvas.Children.RemoveAt(xPointCanvas.Children.Count - 1);
             //  -------------------- animation --------------------
 
-            InputedRefresh();
+            pointList.RemoveAt(pointList.Count - 1);
+            UpdateTextEntry();
             return pointList.Count;
         }
 
         public void DragBegin(int x, int y)
         {
-            int appearIndex = (new Random()).Next() % 9 + 3;
             dragStart = new Point(x, y);
-            for (int i = 0; i < 5; ++i)
-                for (int j = 0; j < 3; ++j)
-                {
-                    Label label = new Label();
-                    label.Width = 125;
-                    label.Height = 55;
-                    label.FontSize = 30;
-                    label.Content = "";
-                    /**/
-                    int[] nia = { 11, 9, 12, 5, 1, 6, 3, 0, 4, 7, 2, 8, 13, 10, 14 };
-                    int ni = nia[i * 3 + j];
-                    label.Content = i + j;
-                    /**/
-                    Canvas.SetTop(label, 300 + i * 60);
-                    Canvas.SetLeft(label, 7 + j * 130);
-                    xChooseCanvas.Children.Add(label);
-                }
-            xChooseCanvas.Background = Brushes.Ivory;
+            xDragCanvas.Background = TEXT_ENTRY_BACKGROUND;
+            draging = true;
             Drag(x, y);
         }
         
         public void Drag(int x, int y)
         {
-            int focusX = Convert.ToInt32((x - dragStart.X) / deviceDragLen);
-            int focusY = Convert.ToInt32((y - dragStart.Y) / deviceDragLen);
-            focusX = Math.Min(Math.Max(focusX, -1), 1) + 1;
-            focusY = Math.Min(Math.Max(focusY, -2), 2) + 2;
+            UpdateTextEntry();
+            int focusX = Convert.ToInt32((x - dragStart.X) / DRAG_LEN_X);
+            int focusY = Convert.ToInt32((y - dragStart.Y) / DRAG_LEN_Y);
+            focusX = Math.Min(Math.Max(focusX, 0), DRAG_COLUMN - 1);
+            focusY = Math.Min(Math.Max(focusY, 0), DRAG_ROW - 1);
             int Count = 0;
-            foreach (UIElement uiElement in xChooseCanvas.Children)
+            foreach (UIElement uiElement in xDragCanvas.Children)
             {
                 Label label = uiElement as Label;
-                if (Count == focusY * 3 + focusX)
+                if (Count == focusY * DRAG_COLUMN + focusX)
                 {
                     dragFocusLabel = label;
-                    label.Background = Brushes.Coral;
+                    label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
                 }
                 else
                 {
-                    label.Background = Brushes.PaleTurquoise;
+                    label.Background = null;
                 }
                 Count++;
             }
@@ -167,8 +135,9 @@ namespace ShowServer
         public void DragEnd(int x, int y)
         {
             Drag(x, y);
-            xChooseCanvas.Background = null;
-            xChooseCanvas.Children.Clear();
+            xDragCanvas.Background = null;
+            xDragCanvas.Children.Clear();
+            draging = false;
             //InputedText += dragFocusLabel.Content;
             //ClearPoints();
         }
@@ -195,12 +164,12 @@ namespace ShowServer
 
         public void AddKeyboardUi()
         {
-            int keySize = 100;
+            int keySize = 68;
             int keySize2 = keySize - 1;
             int fontSize = keySize / 2 + 1;
             String[] keyLayout = { "QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM" };
-            int[] wOffset = { 150, 150 + keySize / 4, 150 + keySize * 3 / 4 };
-            int hOffset = 33;
+            int[] wOffset = { 300, 300 + keySize / 4, 300 + keySize * 3 / 4 };
+            int hOffset = 85;
 
             for (int r = 0; r < keyLayout.Count(); ++r)
             {
@@ -230,7 +199,7 @@ namespace ShowServer
 
         public void NoticeLoad()
         {
-            StreamReader reader = new StreamReader(new FileStream("PhraseSets/phrases2.txt", FileMode.Open));
+            StreamReader reader = new StreamReader(new FileStream("../../../PhraseSets/phrases2.txt", FileMode.Open));
             while (true)
             {
                 string line = reader.ReadLine();
@@ -251,45 +220,45 @@ namespace ShowServer
             noticeListIndex = (noticeListIndex + 1) % noticeList.Count();
             noticeNow = noticeList[noticeListIndex];
             xNoticeTextBlock.Text = noticeListIndex.ToString() + ": " + noticeNow;
-            InputedRefresh();
+            UpdateTextEntry();
         }
 
-        public void InputedRefresh()
+        public void UpdateTextEntry()
         {
             xInputedTextBlock.Text = noticeListIndex.ToString() + ": ";
-            for (int i = 0; i < Math.Min(pointList.Count(), noticeNow.Count()); ++i)
+            for (int i = 0; i < pointList.Count(); ++i)
             {
-                if (pointList[i].x < 0)
-                {
-                    xInputedTextBlock.Text += " ";
-                }
-                else
-                {
-                    if (noticeNow[i] == ' ')
-                    {
-                        xInputedTextBlock.Text += "*";
-                    }
-                    else
-                    {
-                        xInputedTextBlock.Text += noticeNow[i];
-                    }
-                }
+                xInputedTextBlock.Text += noticeNow[i];
             }
-            for (int i = noticeNow.Count(); i < pointList.Count(); ++i)
-            {
-                xInputedTextBlock.Text += "*";
-            }
-            xInputedTextBlock.Text += "|";
+
+            xDragCanvas.Children.Clear();
+            for (int i = 0; i < DRAG_ROW; ++i)
+                for (int j = 0; j < DRAG_COLUMN; ++j)
+                {
+                    if (pointList.Count == 0) continue;
+                    if (draging == false && i > 0) continue;
+                    Label label = new Label();
+                    label.Width = 200;
+                    label.Height = 50;
+                    label.Foreground = new SolidColorBrush(Color.FromRgb(187, 187, 187));
+                    label.FontSize = 20;
+                    label.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    label.VerticalContentAlignment = VerticalAlignment.Center;
+                    label.Content = recongition.languageModel.ElementAt(pointList.Count * 100 + i * 10 + j).Key;
+                    Canvas.SetTop(label, 12 + i * 55 + (i == 0 ? 0 : 6));
+                    Canvas.SetLeft(label, 90 + j * 210);
+                    xDragCanvas.Children.Add(label);
+                }
         }
 
-        public void operationWrite(string operation)
+        public void OperationWrite(string operation)
         {
             StreamWriter writer1 = new StreamWriter(new FileStream("operation-" + testerName + ".txt", FileMode.Append));
             writer1.WriteLine(operation);
             writer1.Close();
         }
 
-  
+        
         private void xSettingButton_Click(object sender, RoutedEventArgs e)
         {
             Visibility visibility = (xIPTextBox.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
@@ -332,7 +301,7 @@ namespace ShowServer
                     break;
             }
             xPointVisibleButton.Content = pointVisible;
-            foreach (UIElement uiElement in xDrawCanvas.Children)
+            foreach (UIElement uiElement in xPointCanvas.Children)
             {
                 uiElement.BeginAnimation(Ellipse.OpacityProperty, null);
                 uiElement.Opacity = (pointVisible == PointVisible.Visible) ? 1.0 : 0.0;
@@ -416,34 +385,13 @@ namespace ShowServer
         }
 
         public delegate void BeginInvokeDelegate(string str);
+
         public void BeginInvokeMethod(string str)
         {
             Console.WriteLine(str);
             String[] strs = str.Split(' ');
             switch (strs[0])
             {
-                case "devicesize":
-                    mainWindow.deviceWidth = int.Parse(strs[1]);
-                    mainWindow.deviceHeight = int.Parse(strs[2]);
-                    switch (mainWindow.deviceWidth)
-                    {
-                        case 1080:
-                            mainWindow.deviceResize = 2.7;
-                            mainWindow.deviceYBias = 0;
-                            mainWindow.deviceDragLen = 150;
-                            break;
-                        case 720:
-                            mainWindow.deviceResize = 1.8;
-                            mainWindow.deviceYBias = 0;
-                            mainWindow.deviceDragLen = 150;
-                            break;
-                        case 480:
-                            mainWindow.deviceResize = 1.22;
-                            mainWindow.deviceYBias = 50;
-                            mainWindow.deviceDragLen = 100;
-                            break;
-                    }
-                    break;
                 case "dragbegin":
                     mainWindow.DragBegin(int.Parse(strs[1]), int.Parse(strs[2]));
                     break;
