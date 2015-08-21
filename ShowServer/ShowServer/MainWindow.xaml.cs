@@ -17,29 +17,31 @@ namespace ShowServer
 {
     public partial class MainWindow : Window
     {
-        public enum PointVisible    { Visible, Flash, Unvisible };
-        public enum KeyboardVisible { KeyboardOn, KeyboardOff };
+        enum PointVisible    { Flash, Visible, Unvisible };
+        enum KeyboardVisible { KeyboardOn, KeyboardOff };
 
-        public Server server;
-        public string testerName;
-        public PointVisible     pointVisible    = PointVisible.Visible;
-        public KeyboardVisible  keyboardVisible = KeyboardVisible.KeyboardOn;
-        public ImageBrush TEXT_ENTRY_BACKGROUND = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry-background.png", UriKind.Relative)));
+        Server server;
+        string testerName;
+        PointVisible pointVisible = PointVisible.Flash;
+        KeyboardVisible  keyboardVisible = KeyboardVisible.KeyboardOn;
+
+        ImageBrush TEXT_ENTRY_BACKGROUND = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry-background.png", UriKind.Relative)));
+        Brush DRAG_SELETED_BRUSH = new SolidColorBrush(Color.FromRgb(2, 91, 195));
 
         public List<String> noticeList = new List<String>();
-        string noticeNow;
-        int noticeListIndex = -1;
+        public int noticeListIndex = 0;
 
-        public const int DRAG_ROW = 5;
-        public const int DRAG_COLUMN = 5;
-        public const int DRAG_LEN_X = 50;
-        public const int DRAG_LEN_Y = 30;
-        public bool draging = false;
-        public Point dragStart;
-        public Label dragFocusLabel;
+        const int DRAG_ROW = 5;
+        const int DRAG_COLUMN = 5;
+        const int DRAG_LEN_X = 50;
+        const int DRAG_LEN_Y = 30;
+        bool draging = false;
+        Point dragStart;
+        string dragSelected;
+        int dragSeletedIntex;
 
-        public List<UltraPoint> pointList = new List<UltraPoint>();
-        public List<String> wordList = new List<String>();
+        List<UltraPoint> pointList = new List<UltraPoint>();
+        List<String> wordList = new List<String>();
         Recognition recongition = new Recognition();
 
         public MainWindow()
@@ -47,13 +49,10 @@ namespace ShowServer
             InitializeComponent();
             Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/background.png", UriKind.Relative)));
             xKeyboardCanvas.Background = TEXT_ENTRY_BACKGROUND;
-            
+            xInputedTextBlock.Focus();
             AddKeyboardUi();
-            NoticeLoad();
-            NoticeChange();
-            //DragBegin(1, 1);
+            LoadNotice();
         }
-
 
         public void Click(int x, int y, DateTime t)
         {
@@ -81,33 +80,50 @@ namespace ShowServer
             if (pointVisible == PointVisible.Flash) storyboard.Begin(this);
             //  -------------------- animation --------------------
         }
-
         public int LeftSlip(bool userEvent)
         {
             if (userEvent)
             {
                 OperationWrite("backspace");
             }
-            if (pointList.Count == 0) return 0;
+            if (pointList.Count == 0)
+            {
+                if (wordList.Count != 0)
+                {
+                    wordList.RemoveAt(wordList.Count - 1);
+                }
+            }
+            else
+            {
+                //  -------------------- animation --------------------
+                UnregisterName("i" + pointList.Count);
+                xPointCanvas.Children.RemoveAt(xPointCanvas.Children.Count - 1);
+                //  -------------------- animation --------------------
 
-            //  -------------------- animation --------------------
-            UnregisterName("i" + pointList.Count);
-            xPointCanvas.Children.RemoveAt(xPointCanvas.Children.Count - 1);
-            //  -------------------- animation --------------------
-
-            pointList.RemoveAt(pointList.Count - 1);
+                pointList.RemoveAt(pointList.Count - 1);
+            }
             UpdateTextEntry();
             return pointList.Count;
         }
-
+        public void RightSlip()
+        {
+            string[] wordArray = noticeList[noticeListIndex].Split(' ');
+            if (wordList.Count == wordArray.Length)
+            {
+                ChangeNotice();
+            }
+            else
+            {
+                Confirm();
+            }
+        }
         public void DragBegin(int x, int y)
         {
             dragStart = new Point(x, y);
             xDragCanvas.Background = TEXT_ENTRY_BACKGROUND;
             draging = true;
             Drag(x, y);
-        }
-        
+        }       
         public void Drag(int x, int y)
         {
             UpdateTextEntry();
@@ -121,8 +137,8 @@ namespace ShowServer
                 Label label = uiElement as Label;
                 if (Count == focusY * DRAG_COLUMN + focusX)
                 {
-                    dragFocusLabel = label;
-                    label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
+                    dragSelected = label.Content.ToString();
+                    label.Background = DRAG_SELETED_BRUSH;
                 }
                 else
                 {
@@ -131,38 +147,49 @@ namespace ShowServer
                 Count++;
             }
         }
-
         public void DragEnd(int x, int y)
         {
             Drag(x, y);
             xDragCanvas.Background = null;
             xDragCanvas.Children.Clear();
             draging = false;
-            //InputedText += dragFocusLabel.Content;
-            //ClearPoints();
+            Confirm();
         }
-
-        public void Confirm()
+        
+        void UpdateTextEntry()
         {
-            StreamWriter writer0 = new StreamWriter(new FileStream("record-" + testerName + ".txt", FileMode.Append));
-            writer0.WriteLine(noticeNow);
-            for (int i = 0; i < pointList.Count; ++i)
+            xInputedTextBlock.Text = noticeListIndex.ToString() + ": ";
+            foreach (string word in wordList) xInputedTextBlock.Text += word + " ";
+            string[] candidates = recongition.Recognize(pointList);
+            if (pointList.Count > 0)
             {
-                if (pointList[i].x < 0)
-                {
-                    writer0.WriteLine("*");
-                    continue;
-                }
-                writer0.WriteLine(pointList[i].x + " " + pointList[i].y + " " + pointList[i].t.ToFileTime());
+                dragSelected = candidates[dragSeletedIntex = 0];
+                xInputedTextBlock.Text += dragSelected.Substring(0, pointList.Count);
             }
-            writer0.WriteLine();
-            writer0.Close();
-            
-            NoticeChange();
+            xInputedTextBlock.SelectionStart = xInputedTextBlock.Text.Length;
+
+            xDragCanvas.Children.Clear();
+            for (int i = 0; i < DRAG_ROW; ++i)
+                for (int j = 0; j < DRAG_COLUMN; ++j)
+                {
+                    if (pointList.Count == 0) continue;
+                    if (draging == false && i > 0) continue;
+                    int id = i * DRAG_COLUMN + j;
+                    Label label = new Label();
+                    label.Width = 200;
+                    label.Height = 50;
+                    if (draging == false && i == 0 && j == 0) label.Background = DRAG_SELETED_BRUSH;
+                    label.Foreground = new SolidColorBrush(Color.FromRgb(187, 187, 187));
+                    label.FontSize = 20;
+                    label.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    label.VerticalContentAlignment = VerticalAlignment.Center;
+                    label.Content = id < candidates.Length ? candidates[id] : " ";
+                    Canvas.SetTop(label, 12 + i * 55 + (i == 0 ? 0 : 6));
+                    Canvas.SetLeft(label, 90 + j * 210);
+                    xDragCanvas.Children.Add(label);
+                }
         }
-
-
-        public void AddKeyboardUi()
+        void AddKeyboardUi()
         {
             int keySize = 68;
             int keySize2 = keySize - 1;
@@ -196,8 +223,7 @@ namespace ShowServer
                 }
             }
         }
-
-        public void NoticeLoad()
+        void LoadNotice()
         {
             StreamReader reader = new StreamReader(new FileStream("../../../PhraseSets/phrases2.txt", FileMode.Open));
             while (true)
@@ -208,57 +234,36 @@ namespace ShowServer
                 noticeList.Add(line);
             }
             reader.Close();
+            noticeListIndex = noticeList.Count - 1;
+            ChangeNotice();
         }
-
-        public void NoticeChange()
+        void ChangeNotice()
+        {
+            ClearPoints();
+            wordList.Clear();
+            noticeListIndex = (noticeListIndex + 1) % noticeList.Count();
+            xNoticeTextBlock.Text = "" + noticeListIndex.ToString() + ": " + noticeList[noticeListIndex];
+            UpdateTextEntry();
+        }
+        void ClearPoints()
         {
             while (pointList.Count() > 0)
             {
                 LeftSlip(false);
             }
-            wordList.Clear();
-            noticeListIndex = (noticeListIndex + 1) % noticeList.Count();
-            noticeNow = noticeList[noticeListIndex];
-            xNoticeTextBlock.Text = noticeListIndex.ToString() + ": " + noticeNow;
-            UpdateTextEntry();
         }
-
-        public void UpdateTextEntry()
+        void Confirm()
         {
-            xInputedTextBlock.Text = noticeListIndex.ToString() + ": ";
-            for (int i = 0; i < pointList.Count(); ++i)
-            {
-                xInputedTextBlock.Text += noticeNow[i];
-            }
-
-            xDragCanvas.Children.Clear();
-            for (int i = 0; i < DRAG_ROW; ++i)
-                for (int j = 0; j < DRAG_COLUMN; ++j)
-                {
-                    if (pointList.Count == 0) continue;
-                    if (draging == false && i > 0) continue;
-                    Label label = new Label();
-                    label.Width = 200;
-                    label.Height = 50;
-                    label.Foreground = new SolidColorBrush(Color.FromRgb(187, 187, 187));
-                    label.FontSize = 20;
-                    label.HorizontalContentAlignment = HorizontalAlignment.Center;
-                    label.VerticalContentAlignment = VerticalAlignment.Center;
-                    label.Content = recongition.languageModel.ElementAt(pointList.Count * 100 + i * 10 + j).Key;
-                    Canvas.SetTop(label, 12 + i * 55 + (i == 0 ? 0 : 6));
-                    Canvas.SetLeft(label, 90 + j * 210);
-                    xDragCanvas.Children.Add(label);
-                }
+            wordList.Add(dragSelected);
+            ClearPoints();
         }
-
-        public void OperationWrite(string operation)
+        void OperationWrite(string operation)
         {
-            StreamWriter writer1 = new StreamWriter(new FileStream("operation-" + testerName + ".txt", FileMode.Append));
-            writer1.WriteLine(operation);
-            writer1.Close();
+            StreamWriter writer = new StreamWriter(new FileStream("../../../Result/operation-" + testerName + ".txt", FileMode.Append));
+            writer.WriteLine(operation);
+            writer.Close();
         }
-
-        
+      
         private void xSettingButton_Click(object sender, RoutedEventArgs e)
         {
             Visibility visibility = (xIPTextBox.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
@@ -271,7 +276,6 @@ namespace ShowServer
             xNoticeChangeButton.Visibility = visibility;
             xRestartButton.Visibility = visibility;
         }
-
         private void xSetupButton_Click(object sender, RoutedEventArgs e)
         {
             if (server != null) return;
@@ -279,13 +283,11 @@ namespace ShowServer
             server.Listen(this);
             MessageBox.Show("Server setup!");
         }
-
         private void xTesterButton_Click(object sender, RoutedEventArgs e)
         {
             testerName = xTesterTextBox.Text;
             MessageBox.Show("Tester's name: " + testerName);
         }
-
         private void xPointVisibleButton_Click(object sender, RoutedEventArgs e)
         {
             switch (pointVisible)
@@ -307,7 +309,6 @@ namespace ShowServer
                 uiElement.Opacity = (pointVisible == PointVisible.Visible) ? 1.0 : 0.0;
             }
         }
-
         private void xKeyboardButton_Click(object sender, RoutedEventArgs e)
         {
             switch (keyboardVisible)
@@ -325,16 +326,14 @@ namespace ShowServer
                 uiElement.Visibility = (keyboardVisible == KeyboardVisible.KeyboardOn) ? Visibility.Visible : Visibility.Hidden;
             }
         }
-
         private void xNoticeChangeButton_Click(object sender, RoutedEventArgs e)
         {
-            NoticeChange();
+            ChangeNotice();
         }
-
         private void xRestartButton_Click(object sender, RoutedEventArgs e)
         {
-            noticeListIndex = -1;
-            NoticeChange();
+            noticeListIndex = noticeList.Count - 1;
+            ChangeNotice();
         }
     }
 
@@ -344,12 +343,10 @@ namespace ShowServer
         public TcpListener tcpListener;
         public Thread listenThread;
         public string ip;
-
         public Server(string ip2)
         {
             ip = ip2;
         }
-
         public void Listen(MainWindow mainWindow2)
         {
             mainWindow = mainWindow2;
@@ -358,7 +355,6 @@ namespace ShowServer
             listenThread.IsBackground = true;
             listenThread.Start();
         }
-
         public void ListenClient()
         {
             tcpListener.Start();
@@ -371,7 +367,6 @@ namespace ShowServer
                 receiveThread.Start(client);
             }
         }
-
         public void Receive(object clientObject)
         {
             TcpClient client = (TcpClient)clientObject;
@@ -383,9 +378,7 @@ namespace ShowServer
                 this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new BeginInvokeDelegate(BeginInvokeMethod), str);
             }
         }
-
         public delegate void BeginInvokeDelegate(string str);
-
         public void BeginInvokeMethod(string str)
         {
             Console.WriteLine(str);
@@ -406,6 +399,9 @@ namespace ShowServer
                     break;
                 case "leftslip":
                     mainWindow.LeftSlip(true);
+                    break;
+                case "rightslip":
+                    mainWindow.RightSlip();
                     break;
                 default:
                     break;

@@ -22,7 +22,7 @@
         <Button Name="xNoticeChangeButton"  Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Change"    Click="xNoticeChangeButton_Click"   Height="45" Width="80" Canvas.Left="1032" Canvas.Top="678"/>
         <Button Name="xRestartButton"       Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Restart"   Click="xRestartButton_Click"        Height="45" Width="80" Canvas.Left="1117" Canvas.Top="678"/>
 
-        <TextBlock Name="xNoticeTextBlock"  Background="#ffffee" TextWrapping="Wrap" FontSize="30" Height="40" Width="680" Canvas.Top="224" Canvas.Left="313"/>
-        <TextBox   Name="xInputedTextBlock" TextWrapping="Wrap" FontSize="30" Height="40" Width="680" Canvas.Top="289" Canvas.Left="313"/>
+        <TextBlock Name="xNoticeTextBlock"  Background="#000000" Foreground="#dddddd"  TextWrapping="Wrap" FontSize="30" Height="50" Width="680" Canvas.Top="224" Canvas.Left="313" Padding="5"/>
+        <TextBox   Name="xInputedTextBlock" TextWrapping="Wrap" FontSize="30" Height="50" Width="680" Canvas.Top="289" Canvas.Left="313"/>
     </Canvas>
 </Window>
