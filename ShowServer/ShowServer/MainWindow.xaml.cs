@@ -24,17 +24,17 @@ namespace ShowServer
         string testerName;
         PointVisible pointVisible = PointVisible.Flash;
         KeyboardOnOff keyboardOnOff = KeyboardOnOff.KeyboardOn;
+        public int deviceWidth, deviceHeight;
 
         public List<String> sampleList = new List<String>();
         public int sampleListIndex = 0;
 
         const int DRAG_ROW = 5;
         const int DRAG_COLUMN = 5;
-        const int DRAG_SPAN_X = 50;
-        const int DRAG_SPAN_Y = 60;
         const double DRAG_SMOOTH = 1.0;
         bool draging = false;
         int dragStartX, dragStartY;
+        int dragSpanX, dragSpanY;
         int selectX, selectY, selectIndex;
 
         List<UltraPoint> pointList = new List<UltraPoint>();
@@ -107,6 +107,9 @@ namespace ShowServer
             {
                 dragStartX = x;
                 dragStartY = y;
+                dragSpanX = Math.Min(Math.Max((deviceWidth - x - 30) / DRAG_COLUMN, 10), 80);
+                dragSpanY = Math.Min(Math.Max((deviceHeight - y - 80) / DRAG_ROW, 10), 80);
+                Console.WriteLine("drag span: " + dragSpanX + " " + dragSpanY);
                 draging = true;
                 xKeyboardCanvas.Visibility = Visibility.Hidden;
             }
@@ -115,19 +118,19 @@ namespace ShowServer
         public void Drag(int x, int y)
         {
             double addition = DRAG_SMOOTH - 0.5;
-            double selectX2 = 1.0 * (x - dragStartX) / DRAG_SPAN_X;
-            double selectY2 = 1.0 * (y - dragStartY) / DRAG_SPAN_Y;
+            double selectX2 = 1.0 * (x - dragStartX) / dragSpanX;
+            double selectY2 = 1.0 * (y - dragStartY) / dragSpanY;
             selectX2 = Math.Min(Math.Max(selectX2, -addition), DRAG_COLUMN + addition);
             selectY2 = Math.Min(Math.Max(selectY2, -addition), DRAG_ROW + addition);
 
             if (Math.Abs(selectX2 - (selectX + 0.5)) > DRAG_SMOOTH)
             {
-                selectX = (x - dragStartX) / DRAG_SPAN_X;
+                selectX = (x - dragStartX) / dragSpanX;
                 selectX = Math.Min(Math.Max(selectX, 0), DRAG_COLUMN - 1);
             }
             if (Math.Abs(selectY2 - (selectY + 0.5)) > DRAG_SMOOTH)
             {
-                selectY = (y - dragStartY) / DRAG_SPAN_Y;
+                selectY = (y - dragStartY) / dragSpanY;
                 selectY = Math.Min(Math.Max(selectY, 0), DRAG_ROW - 1);
             }
             selectIndex = selectY * DRAG_COLUMN + selectX;
@@ -166,8 +169,8 @@ namespace ShowServer
                     label.Height = 50;
                     if (i * DRAG_COLUMN + j == selectIndex)
                     {
-                        //label.Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/select.png", UriKind.Relative)));
-                        label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
+                        label.Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/select.png", UriKind.Relative)));
+                        //label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
                     }
                     label.Foreground = new SolidColorBrush(Color.FromRgb(187, 187, 187));
                     label.FontSize = 20;
@@ -193,8 +196,8 @@ namespace ShowServer
                 for (int c = 0; c < keyLayout[r].Count(); ++c)
                 {
                     Rectangle rectangle = new Rectangle();
-                    rectangle.Height = keySize;
                     rectangle.Width = keySize;
+                    rectangle.Height = keySize;
                     rectangle.Stroke = new SolidColorBrush(Color.FromRgb(104, 104, 104));
                     Canvas.SetTop(rectangle, hOffset + r * keySize2);
                     Canvas.SetLeft(rectangle, wOffset[r] + c * keySize2);
@@ -203,8 +206,8 @@ namespace ShowServer
                     Label label = new Label();
                     label.FontSize = fontSize;
                     label.Foreground = new SolidColorBrush(Color.FromRgb(104, 104, 104));
-                    label.Height = keySize;
                     label.Width = keySize;
+                    label.Height = keySize;
                     label.HorizontalContentAlignment = HorizontalAlignment.Center;
                     label.VerticalContentAlignment = VerticalAlignment.Center;
                     label.Content = keyLayout[r][c];
@@ -378,6 +381,10 @@ namespace ShowServer
             String[] strs = str.Split(' ');
             switch (strs[0])
             {
+                case "devicesize":
+                    mainWindow.deviceWidth = int.Parse(strs[1]);
+                    mainWindow.deviceHeight = int.Parse(strs[2]);
+                    break;
                 case "dragbegin":
                     mainWindow.DragBegin(int.Parse(strs[1]), int.Parse(strs[2]));
                     break;
