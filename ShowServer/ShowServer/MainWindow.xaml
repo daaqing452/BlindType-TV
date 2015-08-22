@@ -7,11 +7,12 @@
         mc:Ignorable="d"
         Title="Quaternion" Height="768" Width="1300">
     <Canvas>
+        <Canvas Name="xTextEntryCanvas" Height="300" Width="1305" Canvas.Top="447"/>
         <Canvas Name="xKeyboardCanvas"  Height="300" Width="1305" Canvas.Top="447"/>
         <Canvas Name="xDragCanvas"      Height="300" Width="1305" Canvas.Top="447"/>
         <Canvas Name="xPointCanvas"     Height="300" Width="1305" Canvas.Top="447"/>
-        <Line X1="0" Y1="514" X2="1305" Y2="514" Stroke="#555555"></Line>
-
+        <!--<Line X1="0" Y1="514" X2="1305" Y2="514" Stroke="#555555"></Line>-->
+        
         <TextBox Name="xIPTextBox"      Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="192.168.1.111"    Height="20" Width="165" Canvas.Left="1032" Canvas.Top="527"/>
         <TextBox Name="xTesterTextBox"  Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="User"             Height="20" Width="165" Canvas.Left="1032" Canvas.Top="552"/>
         <Button Name="xSettingButton"       Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Setting"   Click="xSettingButton_Click"        Height="45" Width="80" Canvas.Left="1202" Canvas.Top="678"/>
@@ -22,7 +23,7 @@
         <Button Name="xSampleChangeButton"  Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Change"    Click="xSampleChangeButton_Click"   Height="45" Width="80" Canvas.Left="1032" Canvas.Top="678"/>
         <Button Name="xRestartButton"       Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Restart"   Click="xRestartButton_Click"        Height="45" Width="80" Canvas.Left="1117" Canvas.Top="678"/>
 
-        <TextBlock Name="xNoticeTextBlock"  Background="#000000" Foreground="#dddddd"  TextWrapping="Wrap" FontSize="30" Height="50" Width="680" Canvas.Top="224" Canvas.Left="313" Padding="5"/>
-        <TextBox   Name="xInputedTextBlock" TextWrapping="Wrap" FontSize="30" Height="50" Width="680" Canvas.Top="289" Canvas.Left="313"/>
+        <TextBlock Name="xNoticeTextBlock" Background="#eeeeee" TextWrapping="Wrap" FontSize="30" Height="46" Width="680" Canvas.Top="224" Canvas.Left="313" Padding="5"/>
+        <TextBox Name="xInputTextBox" FontSize="30" Height="46" Width="680" Canvas.Top="289" Canvas.Left="313"/>
     </Canvas>
 </Window>

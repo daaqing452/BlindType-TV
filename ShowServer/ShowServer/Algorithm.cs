@@ -55,7 +55,8 @@ namespace ShowServer
                 q.Push(new Guess(s, p));
                 if (q.Count > TOP_K) q.Pop();
             }
-            string[] candidates = new string[q.Count];
+            string[] candidates = new string[q.Count + 1];
+            candidates[q.Count] = SimilarSequence(pointList);
             for (int i = q.Count - 1; i >= 0; --i)
             {
                 candidates[i] = q.Pop().s;
@@ -109,6 +110,27 @@ namespace ShowServer
             }
             return p;
         }
+
+        string SimilarSequence(List<UltraPoint> pointList)
+        {
+            string similarSequence = "";
+            for (int i = 0; i < pointList.Count; ++i)
+            {
+                double bestP = 0;
+                char c = ' ';
+                for (int j = 0; j < ALPHABET_SIZE; ++j)
+                {
+                    double p = absoluteGDPair[j].Probability(pointList[i].x, pointList[i].y);
+                    if (p > bestP)
+                    {
+                        bestP = p;
+                        c = (char)('a' + j);
+                    }
+                }
+                similarSequence += c;
+            }
+            return similarSequence;
+        } 
     }
     
     class GuassianD

@@ -18,14 +18,12 @@ namespace ShowServer
     public partial class MainWindow : Window
     {
         enum PointVisible    { Flash, Visible, Unvisible };
-        enum KeyboardVisible { KeyboardOn, KeyboardOff };
+        enum KeyboardOnOff { KeyboardOn, KeyboardOff };
 
         Server server;
         string testerName;
         PointVisible pointVisible = PointVisible.Flash;
-        KeyboardVisible  keyboardVisible = KeyboardVisible.KeyboardOn;
-
-        ImageBrush TEXT_ENTRY_BACKGROUND = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry-background.png", UriKind.Relative)));
+        KeyboardOnOff keyboardOnOff = KeyboardOnOff.KeyboardOn;
 
         public List<String> sampleList = new List<String>();
         public int sampleListIndex = 0;
@@ -48,8 +46,7 @@ namespace ShowServer
         {
             InitializeComponent();
             Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/background.png", UriKind.Relative)));
-            xKeyboardCanvas.Background = TEXT_ENTRY_BACKGROUND;
-            xInputedTextBlock.Focus();
+            xTextEntryCanvas.Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry.png", UriKind.Relative)));
             AddKeyboardUi();
             LoadSample();
         }
@@ -111,7 +108,7 @@ namespace ShowServer
                 dragStartX = x;
                 dragStartY = y;
                 draging = true;
-                xDragCanvas.Background = TEXT_ENTRY_BACKGROUND;
+                xKeyboardCanvas.Visibility = Visibility.Hidden;
             }
             Drag(x, y);
         }       
@@ -134,27 +131,28 @@ namespace ShowServer
                 selectY = Math.Min(Math.Max(selectY, 0), DRAG_ROW - 1);
             }
             selectIndex = selectY * DRAG_COLUMN + selectX;
+            selectIndex = Math.Min(selectIndex, candidates.Length - 1);
             UpdateTextEntry();
         }
         public void DragEnd(int x, int y)
         {
             Drag(x, y);
             draging = false;
-            xDragCanvas.Background = null;
             xDragCanvas.Children.Clear();
+            xKeyboardCanvas.Visibility = (keyboardOnOff == KeyboardOnOff.KeyboardOn) ? Visibility.Visible : Visibility.Hidden;
             NextWord();
         }
         
         void UpdateTextEntry()
         {
-            xInputedTextBlock.Text = sampleListIndex.ToString() + ": ";
-            foreach (string word in wordList) xInputedTextBlock.Text += word + " ";
+            xInputTextBox.Text = sampleListIndex.ToString() + ": ";
+            foreach (string word in wordList) xInputTextBox.Text += word + " ";
             if (pointList.Count > 0)
             {
                 if (!draging) candidates = recongition.Recognize(pointList);
-                xInputedTextBlock.Text += candidates[selectIndex].Substring(0, pointList.Count);
+                xInputTextBox.Text += candidates[selectIndex].Substring(0, pointList.Count);
             }
-            xInputedTextBlock.SelectionStart = xInputedTextBlock.Text.Length;
+            xInputTextBox.SelectionStart = xInputTextBox.Text.Length;
             
             xDragCanvas.Children.Clear();
             for (int i = 0; i < DRAG_ROW; ++i)
@@ -166,7 +164,11 @@ namespace ShowServer
                     Label label = new Label();
                     label.Width = 200;
                     label.Height = 50;
-                    if (i * DRAG_COLUMN + j == selectIndex) label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
+                    if (i * DRAG_COLUMN + j == selectIndex)
+                    {
+                        //label.Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/select.png", UriKind.Relative)));
+                        label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
+                    }
                     label.Foreground = new SolidColorBrush(Color.FromRgb(187, 187, 187));
                     label.FontSize = 20;
                     label.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -204,6 +206,7 @@ namespace ShowServer
                     label.Height = keySize;
                     label.Width = keySize;
                     label.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    label.VerticalContentAlignment = VerticalAlignment.Center;
                     label.Content = keyLayout[r][c];
                     Canvas.SetTop(label, hOffset + r * keySize2);
                     Canvas.SetLeft(label, wOffset[r] + c * keySize2);
@@ -274,6 +277,7 @@ namespace ShowServer
             server = new Server(xIPTextBox.Text);
             server.Listen(this);
             MessageBox.Show("Server setup!");
+            xInputTextBox.Focus();
         }
         private void xTesterButton_Click(object sender, RoutedEventArgs e)
         {
@@ -303,20 +307,17 @@ namespace ShowServer
         }
         private void xKeyboardButton_Click(object sender, RoutedEventArgs e)
         {
-            switch (keyboardVisible)
+            switch (keyboardOnOff)
             {
-                case KeyboardVisible.KeyboardOn:
-                    keyboardVisible = KeyboardVisible.KeyboardOff;
+                case KeyboardOnOff.KeyboardOn:
+                    keyboardOnOff = KeyboardOnOff.KeyboardOff;
                     break;
-                case KeyboardVisible.KeyboardOff:
-                    keyboardVisible = KeyboardVisible.KeyboardOn;
+                case KeyboardOnOff.KeyboardOff:
+                    keyboardOnOff = KeyboardOnOff.KeyboardOn;
                     break;
             }
-            xKeyboardButton.Content = keyboardVisible;
-            foreach (UIElement uiElement in xKeyboardCanvas.Children)
-            {
-                uiElement.Visibility = (keyboardVisible == KeyboardVisible.KeyboardOn) ? Visibility.Visible : Visibility.Hidden;
-            }
+            xKeyboardButton.Content = keyboardOnOff;
+            xKeyboardCanvas.Visibility = (keyboardOnOff == KeyboardOnOff.KeyboardOn) ? Visibility.Visible : Visibility.Hidden;
         }
         private void xSampleChangeButton_Click(object sender, RoutedEventArgs e)
         {
