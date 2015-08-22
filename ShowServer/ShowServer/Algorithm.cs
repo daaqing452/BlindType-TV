@@ -44,6 +44,7 @@ namespace ShowServer
         }
         public string[] Recognize(List<UltraPoint> pointList)
         {
+            Console.WriteLine("Recoginize");
             PriorityQueue q = new PriorityQueue();
             foreach (KeyValuePair<string, double> k in languageModel)
             {

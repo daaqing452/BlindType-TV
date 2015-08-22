@@ -26,10 +26,9 @@ namespace ShowServer
         KeyboardVisible  keyboardVisible = KeyboardVisible.KeyboardOn;
 
         ImageBrush TEXT_ENTRY_BACKGROUND = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry-background.png", UriKind.Relative)));
-        Brush DRAG_SELETED_BRUSH = new SolidColorBrush(Color.FromRgb(2, 91, 195));
 
-        public List<String> noticeList = new List<String>();
-        public int noticeListIndex = 0;
+        public List<String> sampleList = new List<String>();
+        public int sampleListIndex = 0;
 
         const int DRAG_ROW = 5;
         const int DRAG_COLUMN = 5;
@@ -39,11 +38,11 @@ namespace ShowServer
         bool draging = false;
         int dragStartX, dragStartY;
         int selectX, selectY, selectIndex;
-        string selectString;
 
         List<UltraPoint> pointList = new List<UltraPoint>();
         List<String> wordList = new List<String>();
         Recognition recongition = new Recognition();
+        string[] candidates;
 
         public MainWindow()
         {
@@ -52,7 +51,7 @@ namespace ShowServer
             xKeyboardCanvas.Background = TEXT_ENTRY_BACKGROUND;
             xInputedTextBlock.Focus();
             AddKeyboardUi();
-            LoadNotice();
+            LoadSample();
         }
 
         public void Click(int x, int y, DateTime t)
@@ -83,40 +82,27 @@ namespace ShowServer
         }
         public int LeftSlip(bool userEvent)
         {
-            if (userEvent)
-            {
-                OperationWrite("backspace");
-            }
-            if (pointList.Count == 0)
-            {
-                if (wordList.Count != 0)
-                {
-                    wordList.RemoveAt(wordList.Count - 1);
-                }
-            }
-            else
+            if (pointList.Count == 0 && wordList.Count != 0) wordList.RemoveAt(wordList.Count - 1);
+            if (pointList.Count > 0)
             {
                 //  -------------------- animation --------------------
                 UnregisterName("i" + pointList.Count);
                 xPointCanvas.Children.RemoveAt(xPointCanvas.Children.Count - 1);
                 //  -------------------- animation --------------------
-
                 pointList.RemoveAt(pointList.Count - 1);
             }
-            UpdateTextEntry();
+            if (userEvent)
+            {
+                OperationWrite("backspace");
+                UpdateTextEntry();
+            }
             return pointList.Count;
         }
         public void RightSlip()
         {
-            string[] wordArray = noticeList[noticeListIndex].Split(' ');
-            if (wordList.Count == wordArray.Length)
-            {
-                ChangeNotice();
-            }
-            else
-            {
-                Confirm();
-            }
+            string[] wordArray = sampleList[sampleListIndex].Split(' ');
+            if (pointList.Count == 0 && wordList.Count == wordArray.Length) NextSentence();
+            if (pointList.Count != 0) NextWord();
         }
         public void DragBegin(int x, int y)
         {
@@ -131,8 +117,6 @@ namespace ShowServer
         }       
         public void Drag(int x, int y)
         {
-            UpdateTextEntry();
-
             double addition = DRAG_SMOOTH - 0.5;
             double selectX2 = 1.0 * (x - dragStartX) / DRAG_SPAN_X;
             double selectY2 = 1.0 * (y - dragStartY) / DRAG_SPAN_Y;
@@ -150,44 +134,28 @@ namespace ShowServer
                 selectY = Math.Min(Math.Max(selectY, 0), DRAG_ROW - 1);
             }
             selectIndex = selectY * DRAG_COLUMN + selectX;
-
-            int cnt = 0;
-            foreach (UIElement uiElement in xDragCanvas.Children)
-            {
-                Label label = uiElement as Label;
-                if (cnt == selectIndex)
-                {
-                    selectString = label.Content.ToString();
-                    label.Background = DRAG_SELETED_BRUSH;
-                }
-                else
-                {
-                    label.Background = null;
-                }
-                cnt++;
-            }
+            UpdateTextEntry();
         }
         public void DragEnd(int x, int y)
         {
             Drag(x, y);
+            draging = false;
             xDragCanvas.Background = null;
             xDragCanvas.Children.Clear();
-            draging = false;
-            Confirm();
+            NextWord();
         }
         
         void UpdateTextEntry()
         {
-            xInputedTextBlock.Text = noticeListIndex.ToString() + ": ";
+            xInputedTextBlock.Text = sampleListIndex.ToString() + ": ";
             foreach (string word in wordList) xInputedTextBlock.Text += word + " ";
-            string[] candidates = recongition.Recognize(pointList);
             if (pointList.Count > 0)
             {
-                selectString = candidates[selectIndex];
-                xInputedTextBlock.Text += selectString.Substring(0, pointList.Count);
+                if (!draging) candidates = recongition.Recognize(pointList);
+                xInputedTextBlock.Text += candidates[selectIndex].Substring(0, pointList.Count);
             }
             xInputedTextBlock.SelectionStart = xInputedTextBlock.Text.Length;
-
+            
             xDragCanvas.Children.Clear();
             for (int i = 0; i < DRAG_ROW; ++i)
                 for (int j = 0; j < DRAG_COLUMN; ++j)
@@ -198,7 +166,7 @@ namespace ShowServer
                     Label label = new Label();
                     label.Width = 200;
                     label.Height = 50;
-                    if (draging == false && i == 0 && j == 0) label.Background = DRAG_SELETED_BRUSH;
+                    if (i * DRAG_COLUMN + j == selectIndex) label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
                     label.Foreground = new SolidColorBrush(Color.FromRgb(187, 187, 187));
                     label.FontSize = 20;
                     label.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -243,7 +211,7 @@ namespace ShowServer
                 }
             }
         }
-        void LoadNotice()
+        void LoadSample()
         {
             StreamReader reader = new StreamReader(new FileStream("../../../PhraseSets/phrases2.txt", FileMode.Open));
             while (true)
@@ -251,18 +219,26 @@ namespace ShowServer
                 string line = reader.ReadLine();
                 if (line == null) break;
                 line = line.ToLower();
-                noticeList.Add(line);
+                sampleList.Add(line);
             }
             reader.Close();
-            noticeListIndex = noticeList.Count - 1;
-            ChangeNotice();
+            sampleListIndex = sampleList.Count - 1;
+            NextSentence();
         }
-        void ChangeNotice()
+        void NextWord()
         {
-            ClearPoints();
+            if (pointList.Count > 0)
+            {
+                wordList.Add(candidates[selectIndex]);
+                ClearPoints();
+            }
+            UpdateTextEntry();
+        }
+        void NextSentence()
+        {
             wordList.Clear();
-            noticeListIndex = (noticeListIndex + 1) % noticeList.Count();
-            xNoticeTextBlock.Text = "" + noticeListIndex.ToString() + ": " + noticeList[noticeListIndex];
+            sampleListIndex = (sampleListIndex + 1) % sampleList.Count();
+            xNoticeTextBlock.Text = "" + sampleListIndex.ToString() + ": " + sampleList[sampleListIndex];
             UpdateTextEntry();
         }
         void ClearPoints()
@@ -271,15 +247,7 @@ namespace ShowServer
             {
                 LeftSlip(false);
             }
-        }
-        void Confirm()
-        {
-            if (pointList.Count > 0)
-            {
-                wordList.Add(selectString);
-                ClearPoints();
-                selectX = selectY = selectIndex = 0;
-            }
+            selectX = selectY = selectIndex = 0;
         }
         void OperationWrite(string operation)
         {
@@ -297,7 +265,7 @@ namespace ShowServer
             xTesterButton.Visibility = visibility;
             xPointVisibleButton.Visibility = visibility;
             xKeyboardButton.Visibility = visibility;
-            xNoticeChangeButton.Visibility = visibility;
+            xSampleChangeButton.Visibility = visibility;
             xRestartButton.Visibility = visibility;
         }
         private void xSetupButton_Click(object sender, RoutedEventArgs e)
@@ -350,14 +318,14 @@ namespace ShowServer
                 uiElement.Visibility = (keyboardVisible == KeyboardVisible.KeyboardOn) ? Visibility.Visible : Visibility.Hidden;
             }
         }
-        private void xNoticeChangeButton_Click(object sender, RoutedEventArgs e)
+        private void xSampleChangeButton_Click(object sender, RoutedEventArgs e)
         {
-            ChangeNotice();
+            NextSentence();
         }
         private void xRestartButton_Click(object sender, RoutedEventArgs e)
         {
-            noticeListIndex = noticeList.Count - 1;
-            ChangeNotice();
+            sampleListIndex = sampleList.Count - 1;
+            NextSentence();
         }
     }
 
