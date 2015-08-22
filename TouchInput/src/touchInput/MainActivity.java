@@ -78,8 +78,8 @@ public class MainActivity extends Activity {
 		int x = (int)event.getX();
 		int y = (int)event.getY();
 		
-		//printWriter.write(n + " " + event.getAction() + " (" + event.getX(n) + " " + event.getY(n) + ")\n");
-		//printWriter.flush();
+		printWriter.write(n + " " + event.getAction() + " (" + event.getX(n) + " " + event.getY(n) + ")\n");
+		printWriter.flush();
 		
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		

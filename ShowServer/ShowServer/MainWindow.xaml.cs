@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -17,7 +18,7 @@ namespace ShowServer
 {
     public partial class MainWindow : Window
     {
-        enum PointVisible    { Flash, Visible, Unvisible };
+        enum PointVisible { Flash, Visible, Unvisible };
         enum KeyboardOnOff { KeyboardOn, KeyboardOff };
 
         Server server;
@@ -37,7 +38,7 @@ namespace ShowServer
         int dragSpanX, dragSpanY;
         int selectX, selectY, selectIndex;
 
-        List<UltraPoint> pointList = new List<UltraPoint>();
+        List<Point2D> pointList = new List<Point2D>();
         List<String> wordList = new List<String>();
         Recognition recongition = new Recognition();
         string[] candidates;
@@ -54,7 +55,7 @@ namespace ShowServer
         public void Click(int x, int y, DateTime t)
         {
             OperationWrite("add " + x + " " + y + " " + t.ToFileTime());
-            pointList.Add(new UltraPoint(x, y, t));
+            pointList.Add(new Point2D(x, y));
             UpdateTextEntry();
 
             //  -------------------- animation --------------------
@@ -103,26 +104,23 @@ namespace ShowServer
         }
         public void DragBegin(int x, int y)
         {
-            if (pointList.Count > 0)
-            {
-                dragStartX = x;
-                dragStartY = y;
-                dragSpanX = Math.Min(Math.Max((deviceWidth - x - 30) / DRAG_COLUMN, 10), 80);
-                dragSpanY = Math.Min(Math.Max((deviceHeight - y - 80) / DRAG_ROW, 10), 80);
-                Console.WriteLine("drag span: " + dragSpanX + " " + dragSpanY);
-                draging = true;
-                xKeyboardCanvas.Visibility = Visibility.Hidden;
-            }
-            Drag(x, y);
-        }       
+            if (pointList.Count == 0) return;
+            dragStartX = x;
+            dragStartY = y;
+            dragSpanX = Math.Min(Math.Max((deviceWidth - x - 30) / DRAG_COLUMN, 10), 80);
+            dragSpanY = Math.Min(Math.Max((deviceHeight - y - 80) / DRAG_ROW, 10), 80);
+            Console.WriteLine("drag span: " + dragSpanX + " " + dragSpanY);
+            draging = true;
+            xKeyboardCanvas.Visibility = Visibility.Hidden;
+        }
         public void Drag(int x, int y)
         {
+            if (pointList.Count == 0) return;
             double addition = DRAG_SMOOTH - 0.5;
             double selectX2 = 1.0 * (x - dragStartX) / dragSpanX;
             double selectY2 = 1.0 * (y - dragStartY) / dragSpanY;
             selectX2 = Math.Min(Math.Max(selectX2, -addition), DRAG_COLUMN + addition);
             selectY2 = Math.Min(Math.Max(selectY2, -addition), DRAG_ROW + addition);
-
             if (Math.Abs(selectX2 - (selectX + 0.5)) > DRAG_SMOOTH)
             {
                 selectX = (x - dragStartX) / dragSpanX;
@@ -139,6 +137,7 @@ namespace ShowServer
         }
         public void DragEnd(int x, int y)
         {
+            if (pointList.Count == 0) return;
             Drag(x, y);
             draging = false;
             xDragCanvas.Children.Clear();
@@ -148,15 +147,19 @@ namespace ShowServer
         
         void UpdateTextEntry()
         {
-            xInputTextBox.Text = sampleListIndex.ToString() + ": ";
-            foreach (string word in wordList) xInputTextBox.Text += word + " ";
+            Paragraph paragraph = new Paragraph();
+            paragraph.Inlines.Add(new Run(sampleListIndex.ToString() + ": "));
+            foreach (string word in wordList) paragraph.Inlines.Add(new Run(word + " "));
             if (pointList.Count > 0)
             {
                 if (!draging) candidates = recongition.Recognize(pointList);
-                xInputTextBox.Text += candidates[selectIndex].Substring(0, pointList.Count);
+                paragraph.Inlines.Add(new Underline(new Run(candidates[selectIndex].Substring(0, pointList.Count))));
             }
-            xInputTextBox.SelectionStart = xInputTextBox.Text.Length;
-            
+            FlowDocument flowDocument = new FlowDocument();
+            flowDocument.Blocks.Add(paragraph);
+            xInputRichTextBox.Document = flowDocument;
+            xInputRichTextBox.CaretPosition = xInputRichTextBox.Document.Blocks.LastBlock.ContentEnd;
+
             xDragCanvas.Children.Clear();
             for (int i = 0; i < DRAG_ROW; ++i)
                 for (int j = 0; j < DRAG_COLUMN; ++j)
@@ -258,7 +261,7 @@ namespace ShowServer
         void OperationWrite(string operation)
         {
             StreamWriter writer = new StreamWriter(new FileStream("../../../Result/operation-" + testerName + ".txt", FileMode.Append));
-            writer.WriteLine(operation);
+            writer.WriteLine(DateTime.Now.ToFileTime() + " " + operation);
             writer.Close();
         }
       
@@ -280,7 +283,25 @@ namespace ShowServer
             server = new Server(xIPTextBox.Text);
             server.Listen(this);
             MessageBox.Show("Server setup!");
-            xInputTextBox.Focus();
+            xInputRichTextBox.Focus();
+        }
+        private void xAlgorithmButton_Click(object sender, RoutedEventArgs e)
+        {
+            switch (xAlgorithmButton.Content.ToString())
+            {
+                case "A-G-L":
+                    xAlgorithmButton.Content = "A-G-K";
+                    recongition.ChangeMode("A-G-K");
+                    break;
+                case "A-G-K":
+                    xAlgorithmButton.Content = "R-G-K";
+                    recongition.ChangeMode("R-G-K");
+                    break;
+                case "R-G-K":
+                    xAlgorithmButton.Content = "A-G-L";
+                    recongition.ChangeMode("A-G-L");
+                    break;
+            }
         }
         private void xTesterButton_Click(object sender, RoutedEventArgs e)
         {
@@ -406,20 +427,6 @@ namespace ShowServer
                 default:
                     break;
             }
-        }
-    }
-
-    public class UltraPoint
-    {
-        public int x, y;
-        public DateTime t;
-        public Ellipse ellipse;
-        public Label label;
-        public UltraPoint(int x2, int y2, DateTime t2)
-        {
-            x = x2;
-            y = y2;
-            t = t2;
         }
     }
 }

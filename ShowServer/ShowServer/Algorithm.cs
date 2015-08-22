@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,41 +7,49 @@ namespace ShowServer
 {
     class Recognition
     {
-        delegate double Prediction(string guess, List<UltraPoint> pointList);
+        delegate double Prediction(string guess, List<Point2D> pointList);
 
         const int ALPHABET_SIZE = 26;
         const int LANGUAGE_MODEL_SIZE = 50000;
         const int TOP_K = 25;
         
         public Dictionary<string, double> languageModel;
-        public GDPair[] absoluteGDPair;
-        public GDPair[,] relativeGDPair;
+        public GaussianPair[] absoluteGaussianPair;
+        public GaussianPair[,] relativeGaussianPair;
 
-        public GDPair[] absoluteLetterGDPair;
-        public GDPair[] absoluteKeyboardGDPair;
+        public GaussianPair[] absoluteLetterGaussianPair;
+        public GaussianPair[] absoluteKeyboardGaussianPair;
+        public GaussianPair[,] relativeKeyboardGaussianPair;
         Prediction prediction;
 
         public Recognition()
         {
             LoadLanguageModel();
             LoadAbsoluteLetterModel();
-            ChangeMode("Absolute-Letter");
+            LoadAbsoluteKeyboardModel();
+            LoadRelativeKeyboardModel();
+            ChangeMode("A-G-L");
         }
         public void ChangeMode(string mode)
         {
             switch (mode)
             {
-                case "Absolute-Letter":
-                    absoluteGDPair = absoluteLetterGDPair;
+                case "A-G-L":
+                    absoluteGaussianPair = absoluteLetterGaussianPair;
                     prediction = Absolute;
                     break;
-                case "Absolute-Keyboard":
+                case "A-G-K":
+                    absoluteGaussianPair = absoluteKeyboardGaussianPair;
+                    prediction = Absolute;
                     break;
-                case "Relative-Keyboard":
+                case "R-G-K":
+                    absoluteGaussianPair = absoluteKeyboardGaussianPair;
+                    relativeGaussianPair = relativeKeyboardGaussianPair;
+                    prediction = Relative;
                     break;
             }
         }
-        public string[] Recognize(List<UltraPoint> pointList)
+        public string[] Recognize(List<Point2D> pointList)
         {
             Console.WriteLine("Recoginize");
             PriorityQueue q = new PriorityQueue();
@@ -81,7 +88,7 @@ namespace ShowServer
         }
         void LoadAbsoluteLetterModel()
         {
-            absoluteLetterGDPair = new GDPair[26];
+            absoluteLetterGaussianPair = new GaussianPair[26];
             StreamReader reader = new StreamReader("../../../Model/Absolute-General-Letter.txt");
             while (true)
             {
@@ -89,29 +96,88 @@ namespace ShowServer
                 if (line == null) break;
                 string[] lineArray = line.Split('\t');
                 char letter = lineArray[0][0];
-                GuassianD xD = new GuassianD(double.Parse(lineArray[1]), double.Parse(lineArray[2]));
-                GuassianD yD = new GuassianD(double.Parse(lineArray[3]), double.Parse(lineArray[4]));
-                absoluteLetterGDPair[letter - 'a'] = new GDPair(xD, yD);
+                Gaussian xD = new Gaussian(double.Parse(lineArray[1]), double.Parse(lineArray[2]));
+                Gaussian yD = new Gaussian(double.Parse(lineArray[3]), double.Parse(lineArray[4]));
+                absoluteLetterGaussianPair[letter - 'a'] = new GaussianPair(xD, yD);
             }
-            Console.WriteLine("Load absolute letter keyGDPair : " + absoluteLetterGDPair.Length);
+            Console.WriteLine("Load absolute letter GaussianPair : " + absoluteLetterGaussianPair.Length);
             reader.Close();
         }
         void LoadAbsoluteKeyboardModel()
         {
-            absoluteKeyboardGDPair = new GDPair[ALPHABET_SIZE];
+            absoluteKeyboardGaussianPair = new GaussianPair[ALPHABET_SIZE];
+            StreamReader reader = new StreamReader("../../../Model/Absolute-General-Keyboard.txt");
+            string line = reader.ReadLine();
+            string[] lineArray = line.Split('\t');
+            double xk = double.Parse(lineArray[0]);
+            double xb = double.Parse(lineArray[1]);
+            double xstddev = double.Parse(lineArray[2]);
+            double yk = double.Parse(lineArray[3]);
+            double yb = double.Parse(lineArray[4]);
+            double ystddev = double.Parse(lineArray[5]);
+            for (int i = 0; i < ALPHABET_SIZE; ++i)
+            {
+                Point2D p = StandardPosition((char)(i + 'a'));
+                absoluteKeyboardGaussianPair[i] = new GaussianPair(new Gaussian(p.x * xk + xb, xstddev), new Gaussian(p.y * yk + yb, ystddev));
+            }
+            Console.WriteLine("Load absolute keyboard GaussianPair : " + absoluteKeyboardGaussianPair.Length);
+            reader.Close();
+        }
+        void LoadRelativeKeyboardModel()
+        {
+            relativeKeyboardGaussianPair = new GaussianPair[ALPHABET_SIZE, ALPHABET_SIZE];
+            StreamReader reader = new StreamReader("../../../Model/Relative-General-Keyboard.txt");
+            string line = reader.ReadLine();
+            string[] lineArray = line.Split('\t');
+            double xk = double.Parse(lineArray[0]);
+            double xb = double.Parse(lineArray[1]);
+            double xstddev = double.Parse(lineArray[2]);
+            double yk = double.Parse(lineArray[3]);
+            double yb = double.Parse(lineArray[4]);
+            double ystddev = double.Parse(lineArray[5]);
+            for (int i = 0; i < ALPHABET_SIZE; ++i)
+                for (int j = 0; j < ALPHABET_SIZE; ++j)
+                {
+                    Point2D p = StandardPosition((char)(i + 'a')) - StandardPosition((char)(j + 'a'));
+                    relativeKeyboardGaussianPair[i, j] = new GaussianPair(new Gaussian(p.x * xk + xb, xstddev), new Gaussian(p.y * yk + yb, ystddev));
+                }
+            Console.WriteLine("Load relative keyboard GaussianPair : " + relativeKeyboardGaussianPair.Length);
+            reader.Close();
         }
 
-        double Absolute(string s, List<UltraPoint> pointList)
+        double Absolute(string s, List<Point2D> pointList)
         {
             double p = 1;
             for (int i = 0; i < pointList.Count; ++i)
             {
-                p *= absoluteGDPair[s[i] - 'a'].Probability(pointList[i].x, pointList[i].y);
+                p *= absoluteGaussianPair[s[i] - 'a'].Probability(pointList[i]);
+            }
+            return p;
+        }
+        double Relative(string s, List<Point2D> pointList)
+        {
+            double p = 1;
+            p *= absoluteGaussianPair[s[0] - 'a'].Probability(pointList[0]);
+            for (int i = 1; i < pointList.Count; ++i)
+            {
+                p *= relativeGaussianPair[s[i] - 'a', s[i - 1] - 'a'].Probability(pointList[i] - pointList[i - 1]);
             }
             return p;
         }
 
-        string SimilarSequence(List<UltraPoint> pointList)
+        Point2D StandardPosition(char c)
+        {
+            string[] standardKeyboard = new string[3] { "qwertyuiop", "asdfghjkl", "zxcvbnm" };
+            double[] xBias = new double[3] { 0, 0.25, 0.75 };
+            for (int i = 0; i < 3; ++i)
+                for (int j = 0; j < standardKeyboard[i].Length; ++j)
+                    if (standardKeyboard[i][j] == c)
+                    {
+                        return new Point2D(xBias[i] + j, i);
+                    }
+            return new Point2D(-1, -1);
+        }
+        string SimilarSequence(List<Point2D> pointList)
         {
             string similarSequence = "";
             for (int i = 0; i < pointList.Count; ++i)
@@ -120,7 +186,7 @@ namespace ShowServer
                 char c = ' ';
                 for (int j = 0; j < ALPHABET_SIZE; ++j)
                 {
-                    double p = absoluteGDPair[j].Probability(pointList[i].x, pointList[i].y);
+                    double p = absoluteGaussianPair[j].Probability(pointList[i]);
                     if (p > bestP)
                     {
                         bestP = p;
@@ -133,14 +199,28 @@ namespace ShowServer
         } 
     }
     
-    class GuassianD
+    public class Point2D
+    {
+        public double x, y;
+        public Point2D(double x2, double y2)
+        {
+            x = x2;
+            y = y2;
+        }
+        public static Point2D operator - (Point2D a, Point2D b)
+        {
+            return new Point2D(a.x - b.x, a.y - b.y);
+        }
+    }
+
+    class Gaussian
     {
         public double mu;
         public double sigma;
         private double k0;
         private double k1;
 
-        public GuassianD(double mu2, double sigma2)
+        public Gaussian(double mu2, double sigma2)
         {
             mu = mu2;
             sigma = sigma2;
@@ -154,20 +234,20 @@ namespace ShowServer
         }
     }
 
-    class GDPair
+    class GaussianPair
     {
-        public GuassianD xD;
-        public GuassianD yD;
+        public Gaussian xD;
+        public Gaussian yD;
 
-        public GDPair(GuassianD xD2, GuassianD yD2)
+        public GaussianPair(Gaussian xD2, Gaussian yD2)
         {
             xD = xD2;
             yD = yD2;
         }
 
-        public double Probability(double x, double y)
+        public double Probability(Point2D p)
         {
-            return xD.Probability(x) * yD.Probability(y);
+            return xD.Probability(p.x) * yD.Probability(p.y);
         }
     }
 
