@@ -33,12 +33,13 @@ namespace ShowServer
 
         const int DRAG_ROW = 5;
         const int DRAG_COLUMN = 5;
-        const int DRAG_LEN_X = 50;
-        const int DRAG_LEN_Y = 30;
+        const int DRAG_SPAN_X = 50;
+        const int DRAG_SPAN_Y = 60;
+        const double DRAG_SMOOTH = 1.0;
         bool draging = false;
-        Point dragStart;
-        string dragSelected;
-        int dragSeletedIntex;
+        int dragStartX, dragStartY;
+        int selectX, selectY, selectIndex;
+        string selectString;
 
         List<UltraPoint> pointList = new List<UltraPoint>();
         List<String> wordList = new List<String>();
@@ -119,32 +120,51 @@ namespace ShowServer
         }
         public void DragBegin(int x, int y)
         {
-            dragStart = new Point(x, y);
-            xDragCanvas.Background = TEXT_ENTRY_BACKGROUND;
-            draging = true;
+            if (pointList.Count > 0)
+            {
+                dragStartX = x;
+                dragStartY = y;
+                draging = true;
+                xDragCanvas.Background = TEXT_ENTRY_BACKGROUND;
+            }
             Drag(x, y);
         }       
         public void Drag(int x, int y)
         {
             UpdateTextEntry();
-            int focusX = Convert.ToInt32((x - dragStart.X) / DRAG_LEN_X);
-            int focusY = Convert.ToInt32((y - dragStart.Y) / DRAG_LEN_Y);
-            focusX = Math.Min(Math.Max(focusX, 0), DRAG_COLUMN - 1);
-            focusY = Math.Min(Math.Max(focusY, 0), DRAG_ROW - 1);
-            int Count = 0;
+
+            double addition = DRAG_SMOOTH - 0.5;
+            double selectX2 = 1.0 * (x - dragStartX) / DRAG_SPAN_X;
+            double selectY2 = 1.0 * (y - dragStartY) / DRAG_SPAN_Y;
+            selectX2 = Math.Min(Math.Max(selectX2, -addition), DRAG_COLUMN + addition);
+            selectY2 = Math.Min(Math.Max(selectY2, -addition), DRAG_ROW + addition);
+
+            if (Math.Abs(selectX2 - (selectX + 0.5)) > DRAG_SMOOTH)
+            {
+                selectX = (x - dragStartX) / DRAG_SPAN_X;
+                selectX = Math.Min(Math.Max(selectX, 0), DRAG_COLUMN - 1);
+            }
+            if (Math.Abs(selectY2 - (selectY + 0.5)) > DRAG_SMOOTH)
+            {
+                selectY = (y - dragStartY) / DRAG_SPAN_Y;
+                selectY = Math.Min(Math.Max(selectY, 0), DRAG_ROW - 1);
+            }
+            selectIndex = selectY * DRAG_COLUMN + selectX;
+
+            int cnt = 0;
             foreach (UIElement uiElement in xDragCanvas.Children)
             {
                 Label label = uiElement as Label;
-                if (Count == focusY * DRAG_COLUMN + focusX)
+                if (cnt == selectIndex)
                 {
-                    dragSelected = label.Content.ToString();
+                    selectString = label.Content.ToString();
                     label.Background = DRAG_SELETED_BRUSH;
                 }
                 else
                 {
                     label.Background = null;
                 }
-                Count++;
+                cnt++;
             }
         }
         public void DragEnd(int x, int y)
@@ -163,8 +183,8 @@ namespace ShowServer
             string[] candidates = recongition.Recognize(pointList);
             if (pointList.Count > 0)
             {
-                dragSelected = candidates[dragSeletedIntex = 0];
-                xInputedTextBlock.Text += dragSelected.Substring(0, pointList.Count);
+                selectString = candidates[selectIndex];
+                xInputedTextBlock.Text += selectString.Substring(0, pointList.Count);
             }
             xInputedTextBlock.SelectionStart = xInputedTextBlock.Text.Length;
 
@@ -254,8 +274,12 @@ namespace ShowServer
         }
         void Confirm()
         {
-            wordList.Add(dragSelected);
-            ClearPoints();
+            if (pointList.Count > 0)
+            {
+                wordList.Add(selectString);
+                ClearPoints();
+                selectX = selectY = selectIndex = 0;
+            }
         }
         void OperationWrite(string operation)
         {

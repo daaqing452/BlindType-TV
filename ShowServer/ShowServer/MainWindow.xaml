@@ -12,7 +12,7 @@
         <Canvas Name="xPointCanvas"     Height="300" Width="1305" Canvas.Top="447"/>
         <Line X1="0" Y1="514" X2="1305" Y2="514" Stroke="#555555"></Line>
 
-        <TextBox Name="xIPTextBox"      Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="192.168.1.111"    Height="20" Width="165" Canvas.Left="1032" Canvas.Top="527"/>
+        <TextBox Name="xIPTextBox"      Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="192.168.1.102"    Height="20" Width="165" Canvas.Left="1032" Canvas.Top="527"/>
         <TextBox Name="xTesterTextBox"  Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="User"             Height="20" Width="165" Canvas.Left="1032" Canvas.Top="552"/>
         <Button Name="xSettingButton"       Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Setting"   Click="xSettingButton_Click"        Height="45" Width="80" Canvas.Left="1202" Canvas.Top="678"/>
         <Button Name="xSetupButton"         Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Setup"     Click="xSetupButton_Click"          Height="45" Width="80" Canvas.Left="1032" Canvas.Top="578"/>

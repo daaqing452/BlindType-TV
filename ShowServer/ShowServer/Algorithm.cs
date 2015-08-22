@@ -15,10 +15,11 @@ namespace ShowServer
         const int TOP_K = 25;
         
         public Dictionary<string, double> languageModel;
-        public Keycloud[] absoluteKeycloud;
-        public Keycloud[,] relativeKeycloud;
+        public GDPair[] absoluteGDPair;
+        public GDPair[,] relativeGDPair;
 
-        public Keycloud[] absoluteLetterKeycloud;
+        public GDPair[] absoluteLetterGDPair;
+        public GDPair[] absoluteKeyboardGDPair;
         Prediction prediction;
 
         public Recognition()
@@ -27,16 +28,20 @@ namespace ShowServer
             LoadAbsoluteLetterModel();
             ChangeMode("Absolute-Letter");
         }
-
         public void ChangeMode(string mode)
         {
-            if (mode == "Absolute-Letter")
+            switch (mode)
             {
-                absoluteKeycloud = absoluteLetterKeycloud;
-                prediction = Absolute;
+                case "Absolute-Letter":
+                    absoluteGDPair = absoluteLetterGDPair;
+                    prediction = Absolute;
+                    break;
+                case "Absolute-Keyboard":
+                    break;
+                case "Relative-Keyboard":
+                    break;
             }
         }
-
         public string[] Recognize(List<UltraPoint> pointList)
         {
             PriorityQueue q = new PriorityQueue();
@@ -72,10 +77,9 @@ namespace ShowServer
             Console.WriteLine("Load language model : " + languageModel.Count);
             reader.Close();
         }
-
         void LoadAbsoluteLetterModel()
         {
-            absoluteLetterKeycloud = new Keycloud[26];
+            absoluteLetterGDPair = new GDPair[26];
             StreamReader reader = new StreamReader("../../../Model/Absolute-General-Letter.txt");
             while (true)
             {
@@ -85,10 +89,14 @@ namespace ShowServer
                 char letter = lineArray[0][0];
                 GuassianD xD = new GuassianD(double.Parse(lineArray[1]), double.Parse(lineArray[2]));
                 GuassianD yD = new GuassianD(double.Parse(lineArray[3]), double.Parse(lineArray[4]));
-                absoluteLetterKeycloud[letter - 'a'] = new Keycloud(xD, yD);
+                absoluteLetterGDPair[letter - 'a'] = new GDPair(xD, yD);
             }
-            Console.WriteLine("Load absolute letter keycloud : " + absoluteLetterKeycloud.Length);
+            Console.WriteLine("Load absolute letter keyGDPair : " + absoluteLetterGDPair.Length);
             reader.Close();
+        }
+        void LoadAbsoluteKeyboardModel()
+        {
+            absoluteKeyboardGDPair = new GDPair[ALPHABET_SIZE];
         }
 
         double Absolute(string s, List<UltraPoint> pointList)
@@ -96,7 +104,7 @@ namespace ShowServer
             double p = 1;
             for (int i = 0; i < pointList.Count; ++i)
             {
-                p *= absoluteKeycloud[s[i] - 'a'].Probability(pointList[i].x, pointList[i].y);
+                p *= absoluteGDPair[s[i] - 'a'].Probability(pointList[i].x, pointList[i].y);
             }
             return p;
         }
@@ -123,12 +131,12 @@ namespace ShowServer
         }
     }
 
-    class Keycloud
+    class GDPair
     {
         public GuassianD xD;
         public GuassianD yD;
 
-        public Keycloud(GuassianD xD2, GuassianD yD2)
+        public GDPair(GuassianD xD2, GuassianD yD2)
         {
             xD = xD2;
             yD = yD2;
