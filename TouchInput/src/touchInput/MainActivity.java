@@ -58,9 +58,9 @@ public class MainActivity extends Activity {
 		}
 	};
 	
-	final int HOLDDOWN_TIME = 500;
-	final int STAY_DIST = 60;
-	final int SLIP_DIST = 80;
+	final int DRAG_TIME = 500;
+	final int STAY_DIST = 70;
+	final int SLIP_DIST = 90;
 	
 	final int MODE_NONE = 0;
 	final int MODE_CLICK = 1;
@@ -78,8 +78,8 @@ public class MainActivity extends Activity {
 		int x = (int)event.getX();
 		int y = (int)event.getY();
 		
-		printWriter.write(n + " " + event.getAction() + " (" + event.getX(n) + " " + event.getY(n) + ")\n");
-		printWriter.flush();
+		/*printWriter.write(n + " " + event.getAction() + " (" + event.getX(n) + " " + event.getY(n) + ")\n");
+		printWriter.flush();*/
 		
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		
@@ -94,6 +94,12 @@ public class MainActivity extends Activity {
 			case MODE_CLICK:
 				moveX = x;
 				moveY = y;
+				TouchEvent touchEvent = touchEventList.get(n);
+				if (!ifStay(touchEvent.stayX, touchEvent.stayY, x, y)) {
+					touchEvent.stayX = x;
+					touchEvent.stayY = y;
+					//touchEvent.reschedule();
+				}
 				break;
 			case MODE_DRAG:
 				printWriter.write("drag " + x + " " + y + "\n");
@@ -126,6 +132,12 @@ public class MainActivity extends Activity {
 					printWriter.write("rightslip\n");
 					printWriter.flush();
 				}
+				
+				//	down slip
+				if (y > touchEvent.downY + SLIP_DIST) {
+					printWriter.write("downslip\n");
+					printWriter.flush();
+				}
 				break;
 				
 			case MODE_DRAG:
@@ -145,25 +157,35 @@ public class MainActivity extends Activity {
 	
 	class TouchEvent {
 		public int downX, downY;
+		public int stayX, stayY;
 		public Timer dragTimer;
 		
 		public TouchEvent(int downX2, int downY2) {
-			downX = downX2;
-			downY = downY2;
+			downX = stayX = downX2;
+			downY = stayY = downY2;
 			dragTimer = new Timer();
-			dragTimer.schedule(new TimerTask() {
-				public void run() {
-					if (ifStay(moveX, moveY, downX, downY)) {
-						mode = MODE_DRAG;
-						printWriter.write("dragbegin " + moveX + " " + moveY + "\n");
-						printWriter.flush();
-					}
-				}
-			}, HOLDDOWN_TIME);
+			dragTimer.schedule(new TouchEventTimerTask(), DRAG_TIME);
 		}
 		
 		public void cancel() {
 			dragTimer.cancel();
+		}
+		
+		public void reschedule() {
+			dragTimer.cancel();
+			dragTimer = new Timer();
+			dragTimer.schedule(new TouchEventTimerTask(), DRAG_TIME);
+		}
+		
+		class TouchEventTimerTask extends TimerTask {
+			public void run() {
+				if (ifStay(moveX, moveY, stayX, stayY)) {
+					mode = MODE_DRAG;
+					printWriter.write("dragbegin " + downX + " " + downY + "\n");
+					printWriter.write("drag " + stayX + " " + stayY + "\n");
+					printWriter.flush();
+				}
+			}
 		}
 	}
 	

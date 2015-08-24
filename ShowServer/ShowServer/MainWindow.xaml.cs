@@ -16,19 +16,24 @@ using System.Windows.Threading;
 
 namespace ShowServer
 {
+    enum PointVisible { Flash, Visible, Unvisible };
+    enum KeyboardOnOff { KeyboardOn, KeyboardOff };
+    enum Algorithm { AGL, AGK, RGK };
+    enum SampleFile { Normal, Confuse };
+
     public partial class MainWindow : Window
     {
-        enum PointVisible { Flash, Visible, Unvisible };
-        enum KeyboardOnOff { KeyboardOn, KeyboardOff };
-
         Server server;
-        string testerName;
         PointVisible pointVisible = PointVisible.Flash;
         KeyboardOnOff keyboardOnOff = KeyboardOnOff.KeyboardOn;
+        Algorithm algorithm = Algorithm.AGL;
+        SampleFile sampleFile = SampleFile.Normal;
         public int deviceWidth, deviceHeight;
 
-        public List<String> sampleList = new List<String>();
-        public int sampleListIndex = 0;
+        List<string> sampleList;
+        List<string> sampleNormalList = new List<string>();
+        List<string> sampleConfuseList = new List<string>();
+        int sampleListIndex = 0;
 
         const int DRAG_ROW = 5;
         const int DRAG_COLUMN = 5;
@@ -39,7 +44,7 @@ namespace ShowServer
         int selectX, selectY, selectIndex;
 
         List<Point2D> pointList = new List<Point2D>();
-        List<String> wordList = new List<String>();
+        List<string> wordList = new List<string>();
         Recognition recongition = new Recognition();
         string[] candidates;
 
@@ -52,9 +57,9 @@ namespace ShowServer
             LoadSample();
         }
 
-        public void Click(int x, int y, DateTime t)
+        public void Click(int x, int y)
         {
-            OperationWrite("add " + x + " " + y + " " + t.ToFileTime());
+            OperationWrite("click " + x + " " + y);
             pointList.Add(new Point2D(x, y));
             UpdateTextEntry();
 
@@ -78,36 +83,40 @@ namespace ShowServer
             if (pointVisible == PointVisible.Flash) storyboard.Begin(this);
             //  -------------------- animation --------------------
         }
-        public int LeftSlip(bool userEvent)
+        public void LeftSlip()
         {
+            OperationWrite("leftslip");
             if (pointList.Count == 0 && wordList.Count != 0) wordList.RemoveAt(wordList.Count - 1);
-            if (pointList.Count > 0)
-            {
-                //  -------------------- animation --------------------
-                UnregisterName("i" + pointList.Count);
-                xPointCanvas.Children.RemoveAt(xPointCanvas.Children.Count - 1);
-                //  -------------------- animation --------------------
-                pointList.RemoveAt(pointList.Count - 1);
-            }
-            if (userEvent)
-            {
-                OperationWrite("backspace");
-                UpdateTextEntry();
-            }
-            return pointList.Count;
+            if (pointList.Count > 0) ErasePoint();
+            UpdateTextEntry();
         }
         public void RightSlip()
         {
             string[] wordArray = sampleList[sampleListIndex].Split(' ');
-            if (pointList.Count == 0 && wordList.Count == wordArray.Length) NextSentence();
-            if (pointList.Count != 0) NextWord();
+            if (pointList.Count == 0 && wordList.Count == wordArray.Length)
+            {
+                OperationWrite("sentence " + sampleList[sampleListIndex]);
+                NextSentence();
+            }
+            if (pointList.Count > 0)
+            {
+                OperationWrite("rightslip");
+                NextWord();
+            }
+        }
+        public void DownSlip()
+        {
+            OperationWrite("downslip");
+            ClearPoints();
+            UpdateTextEntry();
         }
         public void DragBegin(int x, int y)
         {
             if (pointList.Count == 0) return;
+            OperationWrite("dragbegin");
             dragStartX = x;
             dragStartY = y;
-            dragSpanX = Math.Min(Math.Max((deviceWidth - x - 30) / DRAG_COLUMN, 10), 80);
+            dragSpanX = Math.Min(Math.Max((deviceWidth - x - 40) / DRAG_COLUMN, 10), 80);
             dragSpanY = Math.Min(Math.Max((deviceHeight - y - 80) / DRAG_ROW, 10), 80);
             Console.WriteLine("drag span: " + dragSpanX + " " + dragSpanY);
             draging = true;
@@ -139,6 +148,7 @@ namespace ShowServer
         {
             if (pointList.Count == 0) return;
             Drag(x, y);
+            OperationWrite("dragend");
             draging = false;
             xDragCanvas.Children.Clear();
             xKeyboardCanvas.Visibility = (keyboardOnOff == KeyboardOnOff.KeyboardOn) ? Visibility.Visible : Visibility.Hidden;
@@ -185,6 +195,41 @@ namespace ShowServer
                     xDragCanvas.Children.Add(label);
                 }
         }
+        void ErasePoint()
+        {
+            if (pointList.Count > 0)
+            {
+                //  -------------------- animation --------------------
+                UnregisterName("i" + pointList.Count);
+                xPointCanvas.Children.RemoveAt(xPointCanvas.Children.Count - 1);
+                //  -------------------- animation --------------------
+                pointList.RemoveAt(pointList.Count - 1);
+            }
+        }
+        void ClearPoints()
+        {
+            while (pointList.Count() > 0)
+            {
+                ErasePoint();
+            }
+            selectX = selectY = selectIndex = 0;
+        }
+        void NextWord()
+        {
+            if (pointList.Count == 0) return;
+            OperationWrite("select " + candidates[selectIndex] + " " + selectIndex);
+            wordList.Add(candidates[selectIndex]);
+            ClearPoints();
+            UpdateTextEntry();
+        }
+        void NextSentence()
+        {
+            ClearPoints();
+            wordList.Clear();
+            sampleListIndex = (sampleListIndex + 1) % sampleList.Count();
+            xNoticeTextBlock.Text = "" + sampleListIndex.ToString() + ": " + sampleList[sampleListIndex];
+            UpdateTextEntry();
+        }
         void AddKeyboardUi()
         {
             int keySize = 68;
@@ -222,60 +267,49 @@ namespace ShowServer
         }
         void LoadSample()
         {
-            StreamReader reader = new StreamReader(new FileStream("../../../PhraseSets/phrases2.txt", FileMode.Open));
+            StreamReader reader;
+            reader = new StreamReader(new FileStream("../../../PhraseSets/phrases-normal.txt", FileMode.Open));
             while (true)
             {
                 string line = reader.ReadLine();
                 if (line == null) break;
                 line = line.ToLower();
-                sampleList.Add(line);
+                sampleNormalList.Add(line);
             }
             reader.Close();
+
+            reader = new StreamReader(new FileStream("../../../PhraseSets/phrases-confuse.txt", FileMode.Open));
+            while (true)
+            {
+                string line = reader.ReadLine();
+                if (line == null) break;
+                line = line.ToLower();
+                sampleConfuseList.Add(line);
+            }
+            reader.Close();
+
+            sampleList = sampleNormalList;
             sampleListIndex = sampleList.Count - 1;
             NextSentence();
         }
-        void NextWord()
-        {
-            if (pointList.Count > 0)
-            {
-                wordList.Add(candidates[selectIndex]);
-                ClearPoints();
-            }
-            UpdateTextEntry();
-        }
-        void NextSentence()
-        {
-            wordList.Clear();
-            sampleListIndex = (sampleListIndex + 1) % sampleList.Count();
-            xNoticeTextBlock.Text = "" + sampleListIndex.ToString() + ": " + sampleList[sampleListIndex];
-            UpdateTextEntry();
-        }
-        void ClearPoints()
-        {
-            while (pointList.Count() > 0)
-            {
-                LeftSlip(false);
-            }
-            selectX = selectY = selectIndex = 0;
-        }
         void OperationWrite(string operation)
         {
-            StreamWriter writer = new StreamWriter(new FileStream("../../../Result/operation-" + testerName + ".txt", FileMode.Append));
-            writer.WriteLine(DateTime.Now.ToFileTime() + " " + operation);
+            string fileName = "../../../Result/op-" + xAlgorithmButton.Content + ".txt";
+            StreamWriter writer = new StreamWriter(new FileStream(fileName, FileMode.Append));
+            long nowTime = DateTime.Now.ToFileTimeUtc() / 10000 % 100000000;
+            writer.WriteLine(nowTime + " " + operation);
             writer.Close();
         }
-      
+        
         private void xSettingButton_Click(object sender, RoutedEventArgs e)
         {
             Visibility visibility = (xIPTextBox.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
             xIPTextBox.Visibility = visibility;
-            xTesterTextBox.Visibility = visibility;
             xSetupButton.Visibility = visibility;
-            xTesterButton.Visibility = visibility;
             xPointVisibleButton.Visibility = visibility;
             xKeyboardButton.Visibility = visibility;
-            xSampleChangeButton.Visibility = visibility;
-            xRestartButton.Visibility = visibility;
+            xAlgorithmButton.Visibility = visibility;
+            xSampleFileButton.Visibility = visibility;
         }
         private void xSetupButton_Click(object sender, RoutedEventArgs e)
         {
@@ -287,26 +321,20 @@ namespace ShowServer
         }
         private void xAlgorithmButton_Click(object sender, RoutedEventArgs e)
         {
-            switch (xAlgorithmButton.Content.ToString())
+            switch (algorithm)
             {
-                case "A-G-L":
-                    xAlgorithmButton.Content = "A-G-K";
-                    recongition.ChangeMode("A-G-K");
+                case Algorithm.AGL:
+                    algorithm = Algorithm.AGK;
                     break;
-                case "A-G-K":
-                    xAlgorithmButton.Content = "R-G-K";
-                    recongition.ChangeMode("R-G-K");
+                case Algorithm.AGK:
+                    algorithm = Algorithm.RGK;
                     break;
-                case "R-G-K":
-                    xAlgorithmButton.Content = "A-G-L";
-                    recongition.ChangeMode("A-G-L");
+                case Algorithm.RGK:
+                    algorithm = Algorithm.AGL;
                     break;
             }
-        }
-        private void xTesterButton_Click(object sender, RoutedEventArgs e)
-        {
-            testerName = xTesterTextBox.Text;
-            MessageBox.Show("Tester's name: " + testerName);
+            recongition.ChangeMode(algorithm);
+            xAlgorithmButton.Content = algorithm;
         }
         private void xPointVisibleButton_Click(object sender, RoutedEventArgs e)
         {
@@ -343,12 +371,19 @@ namespace ShowServer
             xKeyboardButton.Content = keyboardOnOff;
             xKeyboardCanvas.Visibility = (keyboardOnOff == KeyboardOnOff.KeyboardOn) ? Visibility.Visible : Visibility.Hidden;
         }
-        private void xSampleChangeButton_Click(object sender, RoutedEventArgs e)
+        private void xSampleFileButton_Click(object sender, RoutedEventArgs e)
         {
-            NextSentence();
-        }
-        private void xRestartButton_Click(object sender, RoutedEventArgs e)
-        {
+            switch (sampleFile)
+            {
+                case SampleFile.Normal:
+                    sampleFile = SampleFile.Confuse;
+                    sampleList = sampleConfuseList;
+                    break;
+                case SampleFile.Confuse:
+                    sampleFile = SampleFile.Normal;
+                    sampleList = sampleNormalList;
+                    break;
+            }
             sampleListIndex = sampleList.Count - 1;
             NextSentence();
         }
@@ -379,6 +414,7 @@ namespace ShowServer
             {
                 TcpClient client = tcpListener.AcceptTcpClient();
                 MessageBox.Show("Join!");
+                //mainWindow.xInputRichTextBox.Focus();
                 Thread receiveThread = new Thread(Receive);
                 receiveThread.IsBackground = true;
                 receiveThread.Start(client);
@@ -416,13 +452,16 @@ namespace ShowServer
                     mainWindow.DragEnd(int.Parse(strs[1]), int.Parse(strs[2]));
                     break;
                 case "click":
-                    mainWindow.Click(int.Parse(strs[1]), int.Parse(strs[2]), DateTime.Now);
+                    mainWindow.Click(int.Parse(strs[1]), int.Parse(strs[2]));
                     break;
                 case "leftslip":
-                    mainWindow.LeftSlip(true);
+                    mainWindow.LeftSlip();
                     break;
                 case "rightslip":
                     mainWindow.RightSlip();
+                    break;
+                case "downslip":
+                    mainWindow.DownSlip();
                     break;
                 default:
                     break;

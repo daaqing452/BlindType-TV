@@ -28,21 +28,21 @@ namespace ShowServer
             LoadAbsoluteLetterModel();
             LoadAbsoluteKeyboardModel();
             LoadRelativeKeyboardModel();
-            ChangeMode("A-G-L");
+            ChangeMode(Algorithm.AGL);
         }
-        public void ChangeMode(string mode)
+        public void ChangeMode(Algorithm algorithm)
         {
-            switch (mode)
+            switch (algorithm)
             {
-                case "A-G-L":
+                case Algorithm.AGL:
                     absoluteGaussianPair = absoluteLetterGaussianPair;
                     prediction = Absolute;
                     break;
-                case "A-G-K":
+                case Algorithm.AGK:
                     absoluteGaussianPair = absoluteKeyboardGaussianPair;
                     prediction = Absolute;
                     break;
-                case "R-G-K":
+                case Algorithm.RGK:
                     absoluteGaussianPair = absoluteKeyboardGaussianPair;
                     relativeGaussianPair = relativeKeyboardGaussianPair;
                     prediction = Relative;
