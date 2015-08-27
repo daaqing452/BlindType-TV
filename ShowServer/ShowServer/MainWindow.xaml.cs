@@ -299,7 +299,6 @@ namespace ShowServer
 
             sampleList = sampleNormalList;
             sampleListIndex = sampleList.Count - 1;
-            //sampleListIndex = 39;
             NextSentence();
         }
         void OperationWrite(string operation)
@@ -317,7 +316,7 @@ namespace ShowServer
             string localIP = "127.0.0.1";
             foreach (IPAddress ip in addressList)
             {
-                if (ip.ToString().IndexOf("192.") != -1) localIP = ip.ToString();
+                if (ip.ToString().IndexOf("192.168.173") != -1) localIP = ip.ToString();
                 Console.WriteLine(ip);
             }
             Server server = new Server(localIP);
@@ -409,6 +408,7 @@ namespace ShowServer
             }
             xSampleFileButton.Content = sampleFile;
             sampleListIndex = sampleList.Count - 1;
+            //sampleListIndex = 12;
             NextSentence();
         }
     }
