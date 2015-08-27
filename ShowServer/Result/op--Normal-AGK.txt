@@ -1,0 +1,11 @@
+16520167 sentence be home before midnight
+16520173 click 413 1052
+16520368 click 212 777
+16520798 leftslip
+16521146 click 370 957
+16521391 click 575 813
+16521647 click 581 979
+16521845 click 295 786
+16522229 rightslip
+16522239 select built 0 False
+16522867 leftslip

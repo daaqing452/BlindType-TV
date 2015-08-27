@@ -28,7 +28,7 @@ namespace ShowServer
             LoadAbsoluteLetterModel();
             LoadAbsoluteKeyboardModel();
             LoadRelativeKeyboardModel();
-            ChangeMode(Algorithm.AGL);
+            ChangeMode(Algorithm.AGK);
         }
         public void ChangeMode(Algorithm algorithm)
         {
@@ -62,13 +62,15 @@ namespace ShowServer
                 q.Push(new Guess(s, p));
                 if (q.Count > TOP_K) q.Pop();
             }
-            string[] candidates = new string[q.Count + 1];
-            candidates[q.Count] = SimilarSequence(pointList);
-            for (int i = q.Count - 1; i >= 0; --i)
+            List<string> candidates = new List<string>();
+            candidates.Add(SimilarSequence(pointList));
+            while (q.Count > 0)
             {
-                candidates[i] = q.Pop().s;
+                candidates.Add(q.Pop().s);
             }
-            return candidates;
+            candidates.Reverse();
+            Ordering(candidates);
+            return candidates.ToArray();
         }
 
         void LoadLanguageModel()
@@ -197,6 +199,14 @@ namespace ShowServer
             }
             return similarSequence;
         } 
+        void Ordering(List<string> a)
+        {
+            int lastIndex = (a.Count > TOP_K) ? a.Count - 1 : a.Count;
+            if (lastIndex > 5)
+            {
+                a.Sort(5, lastIndex - 5, Comparer<string>.Default);
+            }
+        }
     }
     
     public class Point2D

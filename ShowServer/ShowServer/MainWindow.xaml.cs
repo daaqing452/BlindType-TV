@@ -23,17 +23,18 @@ namespace ShowServer
 
     public partial class MainWindow : Window
     {
-        Server server;
         PointVisible pointVisible = PointVisible.Flash;
         KeyboardOnOff keyboardOnOff = KeyboardOnOff.KeyboardOn;
-        Algorithm algorithm = Algorithm.AGL;
+        Algorithm algorithm = Algorithm.AGK;
         SampleFile sampleFile = SampleFile.Normal;
+        string userName = "";
         public int deviceWidth, deviceHeight;
 
         List<string> sampleList;
         List<string> sampleNormalList = new List<string>();
         List<string> sampleConfuseList = new List<string>();
         int sampleListIndex = 0;
+        bool emptySentense = true;
 
         const int DRAG_ROW = 5;
         const int DRAG_COLUMN = 5;
@@ -55,10 +56,16 @@ namespace ShowServer
             xTextEntryCanvas.Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry.png", UriKind.Relative)));
             AddKeyboardUi();
             LoadSample();
+            SetupServer();
         }
 
         public void Click(int x, int y)
         {
+            if (emptySentense)
+            {
+                OperationWrite("sentence " + sampleList[sampleListIndex]);
+                emptySentense = false;
+            }
             OperationWrite("click " + x + " " + y);
             pointList.Add(new Point2D(x, y));
             UpdateTextEntry();
@@ -95,7 +102,6 @@ namespace ShowServer
             string[] wordArray = sampleList[sampleListIndex].Split(' ');
             if (pointList.Count == 0 && wordList.Count == wordArray.Length)
             {
-                OperationWrite("sentence " + sampleList[sampleListIndex]);
                 NextSentence();
             }
             if (pointList.Count > 0)
@@ -186,7 +192,7 @@ namespace ShowServer
                         //label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
                     }
                     label.Foreground = new SolidColorBrush(Color.FromRgb(187, 187, 187));
-                    label.FontSize = 20;
+                    label.FontSize = 23;
                     label.HorizontalContentAlignment = HorizontalAlignment.Center;
                     label.VerticalContentAlignment = VerticalAlignment.Center;
                     label.Content = id < candidates.Length ? candidates[id] : " ";
@@ -217,7 +223,9 @@ namespace ShowServer
         void NextWord()
         {
             if (pointList.Count == 0) return;
-            OperationWrite("select " + candidates[selectIndex] + " " + selectIndex);
+            string[] sampleArray = sampleList[sampleListIndex].Split(' ');
+            string requireWord = (wordList.Count < sampleArray.Length) ? sampleArray[wordList.Count] : "";
+            OperationWrite("select " + candidates[selectIndex] + " " + selectIndex + " " + candidates.Contains(requireWord));
             wordList.Add(candidates[selectIndex]);
             ClearPoints();
             UpdateTextEntry();
@@ -228,6 +236,7 @@ namespace ShowServer
             wordList.Clear();
             sampleListIndex = (sampleListIndex + 1) % sampleList.Count();
             xNoticeTextBlock.Text = "" + sampleListIndex.ToString() + ": " + sampleList[sampleListIndex];
+            emptySentense = true;
             UpdateTextEntry();
         }
         void AddKeyboardUi()
@@ -290,33 +299,47 @@ namespace ShowServer
 
             sampleList = sampleNormalList;
             sampleListIndex = sampleList.Count - 1;
+            //sampleListIndex = 39;
             NextSentence();
         }
         void OperationWrite(string operation)
         {
-            string fileName = "../../../Result/op-" + xAlgorithmButton.Content + ".txt";
+            string fileName = "../../../Result/op-" + userName + "-" + sampleFile + "-" + algorithm + ".txt";
             StreamWriter writer = new StreamWriter(new FileStream(fileName, FileMode.Append));
             long nowTime = DateTime.Now.ToFileTimeUtc() / 10000 % 100000000;
             writer.WriteLine(nowTime + " " + operation);
             writer.Close();
         }
-        
+        void SetupServer()
+        {
+            string hostName = Dns.GetHostName();
+            IPAddress[] addressList = Dns.GetHostAddresses(hostName);
+            string localIP = "127.0.0.1";
+            foreach (IPAddress ip in addressList)
+            {
+                if (ip.ToString().IndexOf("192.") != -1) localIP = ip.ToString();
+                Console.WriteLine(ip);
+            }
+            Server server = new Server(localIP);
+            server.Listen(this);
+            MessageBox.Show("Server setup " + localIP);
+            xInputRichTextBox.Focus();
+        }
+
         private void xSettingButton_Click(object sender, RoutedEventArgs e)
         {
-            Visibility visibility = (xIPTextBox.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
-            xIPTextBox.Visibility = visibility;
-            xSetupButton.Visibility = visibility;
+            Visibility visibility = (xPointVisibleButton.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+            xTesterTextBox.Visibility = visibility;
+            xTesterButton.Visibility = visibility;
             xPointVisibleButton.Visibility = visibility;
             xKeyboardButton.Visibility = visibility;
             xAlgorithmButton.Visibility = visibility;
             xSampleFileButton.Visibility = visibility;
         }
-        private void xSetupButton_Click(object sender, RoutedEventArgs e)
+        private void xTesterButton_Click(object sender, RoutedEventArgs e)
         {
-            if (server != null) return;
-            server = new Server(xIPTextBox.Text);
-            server.Listen(this);
-            MessageBox.Show("Server setup!");
+            userName = xTesterTextBox.Text;
+            MessageBox.Show("Tester: " + userName);
             xInputRichTextBox.Focus();
         }
         private void xAlgorithmButton_Click(object sender, RoutedEventArgs e)
@@ -330,7 +353,7 @@ namespace ShowServer
                     algorithm = Algorithm.RGK;
                     break;
                 case Algorithm.RGK:
-                    algorithm = Algorithm.AGL;
+                    algorithm = Algorithm.AGK;
                     break;
             }
             recongition.ChangeMode(algorithm);
@@ -384,6 +407,7 @@ namespace ShowServer
                     sampleList = sampleNormalList;
                     break;
             }
+            xSampleFileButton.Content = sampleFile;
             sampleListIndex = sampleList.Count - 1;
             NextSentence();
         }
