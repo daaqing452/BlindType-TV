@@ -1,0 +1,1020 @@
+81688 sentence is for wind buff started spoke voted
+81691 click 535 733
+82835 click 184 830
+86435 rightslip
+86442 select is 0 True
+87829 click 370 874
+87984 click 591 701
+88147 click 221 677
+88686 rightslip
+88690 select for 0 True
+89638 click 213 764
+89799 click 539 737
+89984 click 376 989
+90163 click 192 774
+91537 dragbegin
+94140 dragend
+94147 select wind 22 True
+94952 click 402 1104
+95098 click 437 780
+95374 click 200 896
+95568 click 192 915
+97399 leftslip
+97453 downslip
+99388 click 427 1002
+99736 click 524 735
+100142 click 272 895
+100311 click 306 915
+101967 dragbegin
+104159 dragend
+104164 select boss 7 False
+104373 leftslip
+104429 downslip
+105691 click 408 1077
+106113 click 510 732
+106522 click 251 947
+106691 click 286 937
+109043 dragbegin
+112504 dragend
+112509 select buff 10 True
+113284 click 273 974
+114049 click 473 767
+114239 click 221 942
+114457 click 377 733
+114647 click 495 700
+115426 click 266 727
+115604 click 315 906
+117694 dragbegin
+120948 dragend
+120955 select forties 16 False
+121126 leftslip
+121996 click 280 964
+122902 leftslip
+123637 click 204 975
+124209 click 469 727
+124704 click 164 923
+125288 click 372 701
+125933 click 507 716
+126440 click 244 742
+126652 click 310 868
+127900 dragbegin
+133094 dragend
+133098 select started 19 True
+134162 click 192 944
+134518 click 590 779
+134819 click 432 742
+135258 click 483 938
+135424 click 169 720
+136679 dragbegin
+138127 dragend
+138133 select spoke 3 True
+139012 click 288 1052
+139210 click 559 799
+139624 click 277 776
+139781 click 120 782
+139984 click 216 964
+141422 dragbegin
+143646 dragend
+143662 select voted 2 True
+145459 sentence golf homes trades devised flee hold tags
+145474 click 307 994
+146756 click 601 729
+147709 click 631 925
+148224 click 208 889
+149412 dragbegin
+152443 dragend
+152443 select golf 17 True
+153193 click 389 963
+153365 click 602 780
+153615 click 534 1081
+153912 click 219 771
+154412 click 140 917
+154975 rightslip
+154975 select homes 0 True
+155678 click 385 728
+155990 click 257 684
+156365 click 111 876
+156912 click 368 885
+157084 click 271 662
+158194 click 187 807
+160459 dragbegin
+165481 dragend
+165491 select trades 22 True
+166288 click 249 897
+166445 click 209 711
+167107 click 394 1064
+167403 click 562 749
+168096 click 174 881
+168252 click 299 680
+168417 click 324 886
+169251 click 219 904
+169799 dragbegin
+170391 dragend
+170401 select declared 0 False
+171014 leftslip
+172139 click 263 886
+172305 click 221 713
+173783 click 375 1052
+174174 click 524 699
+174569 click 181 902
+174747 click 253 717
+174918 click 298 852
+176306 dragbegin
+177164 dragend
+177168 select devised 1 True
+178041 click 301 898
+178412 click 645 919
+178715 click 192 781
+178878 click 205 797
+180945 dragbegin
+183858 dragend
+183863 select fire 12 True
+184540 leftslip
+185329 click 262 920
+185803 click 656 935
+186832 click 213 649
+186976 click 205 673
+188524 dragbegin
+190009 dragend
+190013 select flee 3 True
+190594 click 312 968
+190824 click 589 787
+191015 click 615 935
+191459 click 202 878
+192813 dragbegin
+194516 dragend
+194520 select hold 4 True
+195245 click 300 745
+195428 click 85 868
+195773 click 445 894
+195948 click 136 703
+197298 leftslip
+198083 click 166 898
+200444 click 417 791
+201224 leftslip
+202702 leftslip
+203360 leftslip
+204205 click 329 978
+204865 click 127 730
+206092 leftslip
+206594 click 92 954
+208148 dragbegin
+209547 dragend
+209552 select tags 2 True
+211077 sentence pig dare devise reacted her hotter if
+211080 click 635 792
+211261 click 422 743
+211663 click 227 995
+213727 click 451 773
+213981 leftslip
+214040 downslip
+215022 click 682 697
+215215 click 413 673
+215723 click 295 1045
+217193 dragbegin
+220428 dragend
+220428 select pig 11 True
+221074 click 351 929
+221261 click 142 897
+221464 click 437 699
+221621 click 241 757
+223136 leftslip
+223199 downslip
+223933 click 258 1012
+224449 click 88 892
+224839 click 398 671
+225027 click 233 718
+225980 leftslip
+226683 click 325 814
+227324 leftslip
+227871 leftslip
+228574 click 319 809
+229168 leftslip
+229230 downslip
+230230 click 190 955
+230717 click 55 866
+231248 click 397 622
+231420 click 236 676
+232811 dragbegin
+235795 dragend
+235811 select dare 11 True
+236436 click 261 949
+236623 click 209 729
+237592 click 402 1093
+237905 click 546 772
+238795 click 159 927
+238936 click 310 761
+239295 click 172 898
+240717 dragbegin
+241851 dragend
+241851 select devised 1 False
+244195 leftslip
+244258 downslip
+245101 click 241 954
+245320 click 218 770
+246117 click 409 1096
+246461 click 567 806
+246961 click 138 926
+247148 click 270 739
+248586 dragbegin
+249805 dragend
+249820 select devise 2 True
+250423 click 301 739
+250591 click 182 719
+251467 click 79 983
+252180 click 310 1122
+252835 click 444 764
+253158 click 174 743
+253333 click 191 932
+256895 dragbegin
+263005 dragend
+263010 select reacted 15 True
+264280 click 459 1008
+264538 click 146 786
+264684 click 263 738
+265963 dragbegin
+266452 dragend
+266457 select her 1 True
+267136 click 366 1016
+267335 click 566 837
+267724 click 237 795
+267885 click 238 799
+268300 click 96 738
+268458 click 206 719
+269751 dragbegin
+272997 dragend
+273001 select cleese 13 False
+273555 leftslip
+274802 click 321 935
+275132 click 551 715
+275695 click 200 700
+275863 click 200 700
+276198 click 88 693
+276375 click 228 652
+278419 dragbegin
+281582 dragend
+281582 select flawed 13 False
+282221 leftslip
+282274 downslip
+283053 click 375 939
+283625 click 610 691
+284422 click 298 719
+284555 click 312 712
+285044 click 99 745
+285211 click 250 693
+286411 rightslip
+286415 select hotter 0 True
+287173 click 448 681
+287728 click 131 864
+289378 leftslip
+289441 downslip
+289885 click 523 651
+290155 click 198 929
+291232 dragbegin
+292158 dragend
+292163 select if 2 True
+293526 sentence dame john rats charter spine traded
+293535 click 300 897
+294119 click 105 887
+294764 click 570 1067
+295044 click 143 754
+296232 dragbegin
+298543 dragend
+298547 select take 3 True
+299369 leftslip
+299940 click 234 926
+300165 click 101 849
+300592 click 601 1047
+300769 click 127 777
+302042 dragbegin
+305285 dragend
+305290 select dams 13 True
+305701 click 415 1071
+306019 leftslip
+306729 leftslip
+307477 click 228 888
+307904 click 89 851
+308300 click 561 1036
+308540 click 164 725
+309675 dragbegin
+313626 dragend
+313631 select dame 9 True
+314597 click 404 917
+315158 click 595 738
+316001 click 312 972
+317946 click 314 1080
+318769 rightslip
+318780 select john 0 True
+319328 click 191 710
+319562 click 43 824
+319811 click 376 712
+320466 click 112 842
+321784 dragbegin
+325652 dragend
+325656 select rats 14 True
+327402 click 234 1180
+327578 click 497 906
+328155 click 92 950
+328535 click 233 706
+328766 click 417 690
+329149 click 111 682
+329291 click 263 652
+329892 rightslip
+329896 select charter 0 True
+330916 click 182 861
+331248 click 653 766
+331458 click 426 683
+331642 click 356 1056
+331833 click 153 738
+333246 dragbegin
+333960 dragend
+333960 select spine 3 True
+334865 click 223 721
+335244 click 134 673
+336065 click 31 816
+336492 click 190 859
+336659 click 130 631
+336814 click 152 839
+338200 dragbegin
+343278 dragend
+343282 select states 16 True
+343902 leftslip
+344741 click 385 637
+345030 click 246 646
+345250 click 64 789
+345537 click 277 762
+345695 click 198 590
+345843 click 192 831
+347484 dragbegin
+348355 dragend
+348360 select geared 6 True
+349141 leftslip
+350047 click 319 681
+350592 click 207 657
+350971 click 61 855
+351270 click 274 862
+351500 click 213 607
+351723 click 180 623
+352505 leftslip
+353022 click 148 836
+354319 dragbegin
+355883 dragend
+355888 select traded 2 True
+357305 sentence woke big beat higher flew but fame
+357308 click 208 733
+357521 click 573 751
+358270 click 253 688
+358450 click 512 932
+359110 rightslip
+359118 select work 0 False
+359693 click 355 1017
+359853 click 542 726
+360270 click 161 902
+361404 leftslip
+362071 click 361 859
+363720 click 524 723
+363872 click 526 708
+364638 leftslip
+365313 leftslip
+366279 dragbegin
+367431 dragend
+367436 select big 3 True
+368127 click 394 1076
+368413 click 160 759
+368731 click 62 933
+369029 click 433 731
+370315 dragbegin
+371902 dragend
+371907 select beat 1 True
+372468 click 425 976
+372714 click 558 786
+373317 click 307 890
+373464 click 434 854
+374139 click 121 741
+374343 click 236 703
+375560 dragbegin
+376028 dragend
+376033 select higher 1 True
+376698 click 263 920
+376981 click 613 915
+377227 click 592 706
+377491 click 86 759
+378486 dragbegin
+382325 dragend
+382331 select blow 2 False
+383216 leftslip
+383276 downslip
+383876 click 244 937
+384125 click 587 958
+384549 click 128 734
+384816 click 59 700
+388295 dragbegin
+389472 dragend
+389477 select flea 4 True
+390645 leftslip
+391454 click 258 847
+391908 click 591 892
+392735 click 196 674
+393125 click 87 659
+394149 dragbegin
+394953 dragend
+394958 select flew 1 True
+395606 click 384 1086
+395786 click 440 745
+396045 click 169 711
+397236 dragbegin
+397766 dragend
+397771 select but 1 True
+398401 click 302 911
+398612 click 77 865
+398950 click 547 1065
+399161 click 134 743
+400259 dragbegin
+404979 dragend
+404986 select fame 14 True
+406757 sentence felt done beads teacher bold burger
+406761 click 250 910
+406944 click 136 703
+407269 click 623 957
+407489 click 193 676
+408620 dragbegin
+411741 dragend
+411746 select cake 5 True
+412660 leftslip
+412713 downslip
+413197 click 278 863
+413577 click 153 659
+413974 click 612 901
+414193 click 230 654
+415019 rightslip
+415028 select felt 0 True
+415638 click 284 918
+415970 click 592 761
+416320 click 453 1064
+416546 click 187 708
+417734 dragbegin
+419217 dragend
+419222 select done 2 True
+420001 click 380 1016
+420227 click 162 725
+420682 click 76 878
+420966 click 290 903
+421153 click 117 817
+422291 dragbegin
+422755 dragend
+422759 select beads 1 True
+423309 click 406 656
+423497 click 141 658
+423757 click 87 862
+424229 click 267 1016
+424404 click 518 841
+424613 click 137 741
+424792 click 301 699
+425627 rightslip
+425633 select teacher 0 True
+426553 click 390 978
+426936 click 526 715
+427158 click 592 925
+427370 click 139 753
+429053 click 377 800
+429734 leftslip
+431161 leftslip
+432066 downslip
+432724 click 341 1066
+433048 click 562 722
+433282 click 639 945
+433545 click 140 888
+434635 dragbegin
+436775 dragend
+436780 select bold 6 True
+437635 click 393 1103
+438047 click 420 714
+438301 click 151 711
+438905 click 370 935
+439100 click 159 711
+439257 click 286 657
+440607 dragbegin
+441158 dragend
+441163 select burger 1 True
+442758 sentence fine hope bigger revised hog gad heads
+442763 click 217 859
+442946 click 545 766
+443268 click 408 1053
+443510 click 172 681
+444686 dragbegin
+446056 dragend
+446061 select fine 4 True
+446687 click 264 929
+446951 click 570 778
+447250 click 680 756
+447439 click 153 754
+448614 dragbegin
+449030 dragend
+449035 select flow 2 True
+449142 click 358 914
+449701 leftslip
+449756 downslip
+450211 leftslip
+450323 downslip
+450942 click 329 909
+451288 click 554 647
+452057 click 647 766
+452399 click 181 648
+453186 rightslip
+453191 select hope 0 True
+453808 click 342 1000
+454028 click 505 685
+454412 click 310 893
+454520 click 336 862
+454725 click 161 661
+454838 click 324 641
+456099 dragbegin
+456519 dragend
+456582 select bigger 1 True
+457045 click 349 659
+457180 click 187 657
+457769 click 287 1050
+458021 click 547 726
+458806 click 175 832
+458938 click 294 668
+459116 click 342 891
+459766 rightslip
+459774 select revised 0 True
+460722 click 383 878
+460960 click 610 744
+461362 click 166 842
+463042 dragbegin
+467813 dragend
+467892 select hpa 12 False
+468099 leftslip
+469043 click 284 896
+469464 click 565 780
+470011 click 276 884
+472046 dragbegin
+475697 dragend
+475703 select hot 18 False
+476036 leftslip
+477257 click 370 868
+477650 click 582 728
+478159 click 182 863
+479855 leftslip
+480470 leftslip
+480527 downslip
+481185 click 397 866
+481449 click 617 738
+481768 click 233 864
+483344 dragbegin
+487377 dragend
+487377 select did 8 False
+487780 leftslip
+489195 click 365 883
+489791 click 627 640
+491225 click 245 860
+492654 leftslip
+493364 leftslip
+494748 leftslip
+494808 downslip
+495367 click 424 791
+495857 click 628 625
+496579 click 342 841
+498015 dragbegin
+502230 dragend
+502235 select hog 12 True
+502831 click 427 915
+503053 click 131 875
+503727 click 355 904
+504974 dragbegin
+507478 dragend
+507482 select gay 13 False
+507804 leftslip
+508078 downslip
+508686 click 365 873
+509046 click 98 860
+509422 click 311 875
+510897 dragbegin
+513481 dragend
+513486 select gay 15 False
+513751 leftslip
+514776 click 349 847
+515884 click 79 834
+516617 click 336 828
+517712 leftslip
+518284 leftslip
+518339 downslip
+518940 click 300 844
+519543 click 26 850
+520023 click 141 812
+521608 dragbegin
+526004 dragend
+526019 select fax 12 False
+526379 leftslip
+527238 click 465 869
+528098 leftslip
+528676 click 366 907
+529426 click 77 814
+530098 click 307 867
+530879 leftslip
+530941 downslip
+531473 click 385 902
+532192 click 49 882
+532707 click 261 861
+534879 dragbegin
+536957 dragend
+536962 select bar 6 True
+537656 leftslip
+538240 click 354 908
+538859 click 64 889
+539377 click 212 901
+540991 dragbegin
+544501 dragend
+544506 select gad 15 True
+545533 click 408 931
+545852 click 160 734
+546089 click 54 917
+546317 click 240 887
+546592 click 88 856
+548038 dragbegin
+549696 dragend
+549701 select heads 1 True
+551019 sentence bears cafe care queer bug charged
+551023 click 441 1059
+551330 click 204 743
+551461 click 372 722
+552015 click 158 901
+553753 dragbegin
+556826 dragend
+556831 select bats 7 False
+556900 leftslip
+557835 click 361 1002
+558843 click 259 695
+559530 click 88 858
+560118 click 413 686
+561187 click 189 872
+563619 dragbegin
+568068 dragend
+568073 select bears 7 True
+568770 click 342 1084
+568958 click 85 889
+569536 click 357 913
+569697 click 132 711
+570926 dragbegin
+574093 dragend
+574098 select cafe 10 True
+574690 click 350 1099
+574863 click 76 931
+575069 click 370 714
+575227 click 206 712
+576196 rightslip
+576205 select care 0 True
+577355 click 104 793
+577635 click 494 859
+577929 click 169 756
+578038 click 190 765
+578345 click 330 738
+579521 dragbegin
+582055 dragend
+582060 select queer 11 True
+582679 click 411 1118
+582859 click 518 818
+583243 click 202 995
+584452 leftslip
+585017 click 319 962
+586675 dragbegin
+589750 dragend
+589756 select bin 6 False
+589974 leftslip
+591086 click 428 1097
+591354 click 520 761
+591782 click 296 985
+593289 dragbegin
+595857 dragend
+595862 select hiv 12 False
+596094 leftslip
+597049 click 404 1131
+597380 click 465 746
+598007 click 239 944
+600409 dragbegin
+602512 dragend
+602517 select box 7 False
+602763 leftslip
+602820 downslip
+603584 click 407 1087
+603891 click 535 738
+604544 click 255 927
+605786 leftslip
+605840 downslip
+606552 click 419 1065
+606815 click 531 701
+607638 click 406 894
+609759 dragbegin
+611823 dragend
+611828 select bob 7 False
+612061 leftslip
+612118 downslip
+612933 click 373 1085
+613549 click 495 765
+614358 click 312 939
+616328 dragbegin
+618292 dragend
+618297 select bug 11 True
+619309 click 271 1077
+619713 click 437 958
+620116 click 102 903
+620327 click 312 706
+620740 click 252 951
+620971 click 125 693
+621453 click 207 873
+623011 dragbegin
+623427 dragend
+623432 select charged 1 True
+624891 sentence timed of hears chatter cites neat
+624895 click 310 687
+625062 click 550 706
+625304 click 441 1012
+625514 click 153 688
+625701 click 225 878
+627109 dragbegin
+628805 dragend
+628810 select timed 4 True
+629332 click 577 678
+629531 click 199 906
+630182 rightslip
+630187 select of 0 True
+630793 click 385 951
+631117 click 164 733
+631278 click 345 674
+631934 leftslip
+632423 click 86 906
+632685 click 399 686
+632827 click 162 855
+634169 dragbegin
+638813 dragend
+638818 select hears 12 True
+639562 click 254 1086
+640144 click 459 878
+640662 click 87 896
+641027 click 428 732
+641726 click 394 740
+641994 click 147 744
+642137 click 307 710
+642828 rightslip
+642837 select chatter 0 True
+643411 click 245 1059
+643596 click 500 801
+644110 click 274 735
+644614 click 98 753
+644834 click 106 947
+646080 dragbegin
+651360 dragend
+651360 select cited 9 True
+652266 click 442 842
+652844 leftslip
+652907 downslip
+653344 leftslip
+653407 downslip
+654360 click 250 1080
+654641 click 519 757
+655266 click 249 772
+655782 click 109 746
+656016 click 80 913
+657219 dragbegin
+661960 dragend
+661960 select cites 9 True
+662788 click 374 1147
+663085 click 176 785
+663803 click 67 932
+664366 click 392 732
+665788 dragbegin
+667350 dragend
+667350 select neat 2 True
+669241 sentence reviews gold grades nest butter dog
+669257 click 399 784
+669538 click 266 763
+670179 click 423 1080
+670444 click 455 687
+670648 click 156 736
+671335 click 103 723
+671757 click 129 890
+672257 rightslip
+672257 select reviews 0 True
+672804 click 368 913
+672976 click 609 793
+673210 click 658 912
+673429 click 175 745
+675007 dragbegin
+678251 dragend
+678251 select gold 17 True
+679360 click 384 908
+679782 click 252 683
+680203 click 70 831
+680453 click 309 894
+680624 click 217 653
+680781 click 111 838
+681453 rightslip
+681468 select grades 0 True
+682000 click 456 1046
+682218 click 178 740
+682421 click 120 904
+682609 click 417 711
+683859 dragbegin
+691367 dragend
+691372 select nest 20 True
+692204 click 355 1075
+692371 click 424 775
+692827 click 217 721
+693468 click 282 703
+693791 click 111 689
+693965 click 203 670
+695383 dragbegin
+695803 dragend
+695807 select butter 1 True
+696455 click 296 1008
+696734 click 595 811
+696984 click 335 977
+698181 dragbegin
+700873 dragend
+700878 select dog 13 True
+702161 sentence bear refused decide rest teaches jet
+702165 click 409 1085
+702445 click 145 772
+702723 click 89 884
+702962 click 338 722
+704234 dragbegin
+706326 dragend
+706331 select bear 4 True
+706927 click 355 706
+707112 click 212 691
+707799 click 343 910
+708055 click 500 711
+708671 click 129 830
+708813 click 293 670
+708991 click 242 876
+709839 rightslip
+709843 select refused 0 True
+710456 click 226 874
+710648 click 178 694
+711057 click 292 1004
+711288 click 544 706
+712028 click 227 793
+712182 click 214 601
+712373 click 100 818
+713197 leftslip
+714700 dragbegin
+715127 dragend
+715132 select decide 1 True
+715673 click 304 627
+715831 click 186 646
+716035 click 98 837
+716262 click 446 639
+717466 dragbegin
+718079 dragend
+718086 select rest 2 True
+719114 click 410 606
+719337 click 154 657
+719513 click 59 865
+720028 click 272 995
+720226 click 483 785
+721163 click 197 631
+721317 click 70 793
+722035 rightslip
+722044 select teaches 0 True
+722827 click 509 622
+723642 leftslip
+724286 click 336 919
+724741 click 101 642
+724932 click 379 606
+726087 dragbegin
+729109 dragend
+729114 select gay 13 False
+729422 leftslip
+729477 downslip
+730397 click 403 960
+730854 click 108 702
+731039 click 332 676
+732443 leftslip
+733152 leftslip
+733804 downslip
+734313 click 405 988
+735187 downslip
+735680 click 508 918
+736560 click 161 656
+737180 click 430 661
+738533 downslip
+739154 click 412 880
+739980 downslip
+740509 click 485 820
+741342 click 168 703
+741835 click 299 658
+743207 dragbegin
+746751 dragend
+746751 select law 13 True
+747484 leftslip
+747541 downslip
+748184 click 414 867
+749696 leftslip
+749759 downslip
+750274 click 507 904
+751066 click 172 689
+751772 click 372 667
+753691 dragbegin
+757961 dragend
+757966 select jet 9 True
+759666 sentence worry traces hear neads took cited
+759671 click 168 756
+760086 click 520 724
+760622 click 224 687
+760785 click 225 699
+760954 click 425 659
+761598 rightslip
+761602 select worry 0 True
+762338 click 356 653
+762787 click 255 614
+763294 click 69 792
+763636 click 333 979
+763831 click 192 648
+764019 click 98 806
+764693 rightslip
+764698 select traces 0 True
+765324 click 412 822
+765833 click 198 653
+766313 click 75 813
+766495 click 342 594
+767795 dragbegin
+768321 dragend
+768328 select hear 1 True
+768871 click 445 1076
+769115 click 145 750
+769568 click 83 893
+769853 click 284 879
+770086 click 113 842
+771427 dragbegin
+772562 dragend
+772567 select neads 2 True
+773185 click 253 706
+773413 click 566 687
+773532 click 563 678
+773775 click 547 874
+774480 rightslip
+774485 select took 0 True
+775123 click 252 1010
+775897 click 550 665
+776306 click 282 655
+776510 click 134 685
+776706 click 178 849
+777828 dragbegin
+780152 dragend
+780157 select cited 4 True
+781545 sentence fear date wound sons reaches died or
+781554 click 308 924
+781797 click 171 697
+781985 click 59 843
+782161 click 299 681
+783482 dragbegin
+783910 dragend
+783915 select fear 1 True
+784604 click 310 904
+784774 click 114 885
+785085 click 409 636
+785266 click 178 677
+786256 dragbegin
+788400 dragend
+788400 select date 3 True
+788978 click 167 771
+789353 click 571 748
+789588 click 414 687
+790009 click 405 1023
+790213 click 122 789
+791385 dragbegin
+792662 dragend
+792667 select wound 2 True
+793111 click 149 863
+793434 click 484 692
+793739 click 353 1019
+794137 click 78 793
+795431 dragbegin
+796981 dragend
+796986 select sons 3 True
+797430 click 251 626
+797605 click 135 653
+797794 click 60 862
+798143 click 322 996
+798335 click 516 806
+798586 click 209 661
+798766 click 181 854
+800296 dragbegin
+801026 dragend
+801031 select reaches 1 True
+801537 click 188 905
+801926 click 468 708
+802164 click 144 690
+802341 click 132 893
+803376 dragbegin
+803863 dragend
+803868 select died 1 True
+804294 click 543 657
+804453 click 164 711
+805533 leftslip
+807078 click 186 627
+808095 dragbegin
+808799 dragend
+808804 select or 0 True

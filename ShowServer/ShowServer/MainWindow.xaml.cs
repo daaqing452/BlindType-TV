@@ -408,7 +408,7 @@ namespace ShowServer
             }
             xSampleFileButton.Content = sampleFile;
             sampleListIndex = sampleList.Count - 1;
-            //sampleListIndex = 12;
+            sampleListIndex = 6;
             NextSentence();
         }
     }
