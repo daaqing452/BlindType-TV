@@ -12,3 +12,17 @@ F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\R
 F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.exe
 F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.pdb
 F:\Eyes-Free Text Entry QWERTY\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csprojResolveAssemblyReference.cache
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.exe.config
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.exe
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.pdb
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csprojResolveAssemblyReference.cache
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\MainWindow.g.cs
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\App.g.cs
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer_MarkupCompile.cache
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer_MarkupCompile.lref
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\MainWindow.baml
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.g.resources
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.Properties.Resources.resources
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csproj.GenerateResource.Cache
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.exe
+F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.pdb
