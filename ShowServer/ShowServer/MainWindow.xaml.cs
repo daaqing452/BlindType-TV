@@ -52,7 +52,10 @@ namespace ShowServer
         public MainWindow()
         {
             InitializeComponent();
-            Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/background.png", UriKind.Relative)));
+            WindowState = WindowState.Maximized;
+            WindowStyle = WindowStyle.None;
+
+            //Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/background.png", UriKind.Relative)));
             xTextEntryCanvas.Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry.png", UriKind.Relative)));
             AddKeyboardUi();
             LoadSample();
@@ -75,8 +78,8 @@ namespace ShowServer
             image.Source = (ImageSource)new ImageSourceConverter().ConvertFromString("../../../Image/point.png");
             image.Name = "i" + pointList.Count;
             if (pointVisible == PointVisible.Unvisible) image.Opacity = 0.0;
-            Canvas.SetLeft(image, x / 1.2 + 300);
-            Canvas.SetTop(image, (y - 510) / 2.8);
+            Canvas.SetLeft(image, x / 0.9 + 230);
+            Canvas.SetTop(image, (y - 560) / 2.6);
             xPointCanvas.Children.Add(image);
             RegisterName(image.Name, image);
             DoubleAnimation doubleAnimationImage = new DoubleAnimation();
@@ -164,7 +167,7 @@ namespace ShowServer
         void UpdateTextEntry()
         {
             Paragraph paragraph = new Paragraph();
-            paragraph.Inlines.Add(new Run(sampleListIndex.ToString() + ": "));
+            //paragraph.Inlines.Add(new Run(sampleListIndex.ToString() + ": "));
             foreach (string word in wordList) paragraph.Inlines.Add(new Run(word + " "));
             if (pointList.Count > 0)
             {
@@ -175,6 +178,8 @@ namespace ShowServer
             flowDocument.Blocks.Add(paragraph);
             xInputRichTextBox.Document = flowDocument;
             xInputRichTextBox.CaretPosition = xInputRichTextBox.Document.Blocks.LastBlock.ContentEnd;
+
+            xInfoLabel.Content = "Sentense\t" + sampleListIndex + " / " + sampleList.Count + "\nUser Name\t" + userName + "\nPhrase Set\t" + sampleFile + "\n";
 
             xDragCanvas.Children.Clear();
             for (int i = 0; i < DRAG_ROW; ++i)
@@ -192,7 +197,7 @@ namespace ShowServer
                         //label.Background = new SolidColorBrush(Color.FromRgb(2, 91, 195));
                     }
                     label.Foreground = new SolidColorBrush(Color.FromRgb(187, 187, 187));
-                    label.FontSize = 23;
+                    label.FontSize = 30;
                     label.HorizontalContentAlignment = HorizontalAlignment.Center;
                     label.VerticalContentAlignment = VerticalAlignment.Center;
                     label.Content = id < candidates.Length ? candidates[id] : " ";
@@ -235,13 +240,13 @@ namespace ShowServer
             ClearPoints();
             wordList.Clear();
             sampleListIndex = (sampleListIndex + 1) % sampleList.Count();
-            xNoticeTextBlock.Text = "" + sampleListIndex.ToString() + ": " + sampleList[sampleListIndex];
+            xNoticeTextBlock.Text = /*sampleListIndex.ToString() + ": " + */sampleList[sampleListIndex];
             emptySentense = true;
             UpdateTextEntry();
         }
         void AddKeyboardUi()
         {
-            int keySize = 68;
+            int keySize = 75;
             int keySize2 = keySize - 1;
             int fontSize = keySize / 2 + 1;
             String[] keyLayout = { "QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM" };
@@ -316,7 +321,7 @@ namespace ShowServer
             string localIP = "127.0.0.1";
             foreach (IPAddress ip in addressList)
             {
-                if (ip.ToString().IndexOf("192.168.173") != -1) localIP = ip.ToString();
+                if (ip.ToString().IndexOf("192.168.1") != -1) localIP = ip.ToString();
                 Console.WriteLine(ip);
             }
             Server server = new Server(localIP);
@@ -408,7 +413,7 @@ namespace ShowServer
             }
             xSampleFileButton.Content = sampleFile;
             sampleListIndex = sampleList.Count - 1;
-            //sampleListIndex = 6;
+           // sampleListIndex = 1;
             NextSentence();
         }
     }
@@ -456,6 +461,10 @@ namespace ShowServer
             }
         }
         public delegate void BeginInvokeDelegate(string str);
+
+        public long actionDownTime = 0;
+        public long actionDownTimeTotal = 0;
+        public long actionDownTimeCount = 0;
         public void BeginInvokeMethod(string str)
         {
             Console.WriteLine(str);
@@ -483,9 +492,15 @@ namespace ShowServer
                     break;
                 case "rightslip":
                     mainWindow.RightSlip();
+                    /*actionDownTimeTotal += DateTime.Now.ToFileTimeUtc() / 10000 - actionDownTime;
+                    actionDownTimeCount += 1;
+                    Console.WriteLine(actionDownTimeTotal / actionDownTimeCount);*/
                     break;
                 case "downslip":
                     mainWindow.DownSlip();
+                    break;
+                case "actiondown":
+                    actionDownTime = DateTime.Now.ToFileTimeUtc() / 10000;
                     break;
                 default:
                     break;

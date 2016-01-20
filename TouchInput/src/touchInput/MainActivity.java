@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import com.example.eftei.R;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -40,7 +41,6 @@ public class MainActivity extends Activity {
 		okButton = (Button)findViewById(R.id.okButton);
 		okButton.setOnClickListener(okButtonOnClickListener);
 		ipEditText = (EditText)findViewById(R.id.ipEditText);
-		
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		width = displayMetrics.widthPixels;
@@ -51,6 +51,9 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 			if (socket == null) {
 				new NetworkAsyncTask().execute(ipEditText.getText().toString());
+				View rlayout = (View)findViewById(R.id.rlayout);
+				rlayout.setBackgroundColor(Color.parseColor("#000000"));
+				okButton.setBackgroundColor(Color.parseColor("#000000"));
 			} else {
 				socket = null;
 				infoTextView.setText("Hello");
@@ -87,6 +90,8 @@ public class MainActivity extends Activity {
 		case MotionEvent.ACTION_POINTER_DOWN:
 			touchEventList.add(new TouchEvent(x, y));
 			mode = MODE_CLICK;
+			printWriter.write("actiondown\n");
+			printWriter.flush();
 			break;
 			
 		case MotionEvent.ACTION_MOVE:

@@ -1,0 +1,64 @@
+42528740 sentence be home before midnight
+42528757 click 226 723
+42529036 rightslip
+42529047 select a 0 False
+42529509 click 450 921
+42529671 click 452 920
+42530223 rightslip
+42530235 select mm 0 False
+42530520 click 404 921
+42530882 rightslip
+42530890 select i 0 False
+42531192 click 381 943
+42531521 rightslip
+42531525 select i 0 False
+42532351 sentence he played a pimp in that movie
+42532356 click 378 869
+42532682 rightslip
+42532688 select i 0 False
+42533057 click 238 964
+42533390 rightslip
+42533398 select a 0 False
+42533733 click 388 917
+42534130 rightslip
+42534137 select i 0 True
+42534476 click 419 922
+42534833 rightslip
+42534838 select i 0 False
+42535135 click 450 904
+42535483 rightslip
+42535487 select i 0 False
+42535816 click 413 885
+42536154 rightslip
+42536159 select i 0 False
+42536448 click 445 861
+42536832 rightslip
+42536850 select i 0 False
+42537941 sentence i skimmed through your proposal
+42537948 click 418 836
+42538345 rightslip
+42538348 select i 0 True
+42538707 click 369 857
+42539098 rightslip
+42539106 select i 0 False
+42540278 leftslip
+42540638 leftslip
+42541184 click 476 749
+42541744 rightslip
+42541748 select i 0 True
+42542185 click 215 911
+42542461 click 518 886
+42542644 click 483 749
+42542826 click 525 997
+42543000 click 535 1014
+42543228 click 226 788
+42543365 click 224 901
+42544079 rightslip
+42544083 select skimmed 0 True
+42544434 click 318 742
+42544615 click 338 907
+42544818 click 253 770
+42545015 click 553 752
+42545178 click 395 719
+42545342 click 251 873
+42545522 click 381 876
