@@ -321,7 +321,7 @@ namespace ShowServer
             string localIP = "127.0.0.1";
             foreach (IPAddress ip in addressList)
             {
-                if (ip.ToString().IndexOf("192.168.1") != -1) localIP = ip.ToString();
+                if (ip.ToString().IndexOf("192.168.") != -1) localIP = ip.ToString();
                 Console.WriteLine(ip);
             }
             Server server = new Server(localIP);
