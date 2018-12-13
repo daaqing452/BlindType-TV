@@ -40,3 +40,45 @@ F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\Sho
 F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.g.resources
 F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.Properties.Resources.resources
 F:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csproj.GenerateResource.Cache
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.exe.config
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.exe
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.pdb
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.exe
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.pdb
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csprojResolveAssemblyReference.cache
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\MainWindow.g.cs
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\App.g.cs
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer_MarkupCompile.cache
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer_MarkupCompile.lref
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\MainWindow.baml
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.g.resources
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.Properties.Resources.resources
+E:\Eyes-Free Text Entry QWERTY\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csproj.GenerateResource.Cache
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.exe.config
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.exe
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.pdb
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.exe
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.pdb
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csprojResolveAssemblyReference.cache
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\MainWindow.g.cs
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\App.g.cs
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer_MarkupCompile.cache
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer_MarkupCompile.lref
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\MainWindow.baml
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.g.resources
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.Properties.Resources.resources
+E:\Eyes-Free One-Thumb Text Entry\Experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csproj.GenerateResource.Cache
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.exe.config
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.exe
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.pdb
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.exe
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\bin\Release\ShowServer.pdb
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csprojResolveAssemblyReference.cache
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\MainWindow.g.cs
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\App.g.cs
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer_MarkupCompile.cache
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer_MarkupCompile.lref
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\MainWindow.baml
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.g.resources
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.Properties.Resources.resources
+E:\BlindType\experiment 2\Platform\Platform-3.0\ShowServer\ShowServer\obj\Release\ShowServer.csproj.GenerateResource.Cache

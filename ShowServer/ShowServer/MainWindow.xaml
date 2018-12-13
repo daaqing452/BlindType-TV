@@ -12,17 +12,20 @@
         <Canvas Name="xDragCanvas"      Height="321" Width="1366" Canvas.Top="447"/>
         <Canvas Name="xPointCanvas"     Height="321" Width="1366" Canvas.Top="447"/>
 
-        <TextBox Name="xTesterTextBox"      Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="User" Height="20" Width="165" Canvas.Left="1080" Canvas.Top="553"/>
-        <Button Name="xSettingButton"       Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Setting"    Click="xSettingButton_Click"        Height="45" Width="80" Canvas.Left="1250" Canvas.Top="678"/>
-        <Button Name="xTesterButton"        Background="#221111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Tester"     Click="xTesterButton_Click"         Height="45" Width="80" Canvas.Left="1080" Canvas.Top="578"/>
-        <Button Name="xAlgorithmButton"     Background="#112211" BorderBrush="#888888" Foreground="#bbbbbb" Content="AGK"        Click="xAlgorithmButton_Click"      Height="45" Width="80" Canvas.Left="1080" Canvas.Top="628"/>
-        <Button Name="xPointVisibleButton"  Background="#222211" BorderBrush="#888888" Foreground="#bbbbbb" Content="Flash"      Click="xPointVisibleButton_Click"   Height="45" Width="80" Canvas.Left="1165" Canvas.Top="578"/>
-        <Button Name="xKeyboardButton"      Background="#112222" BorderBrush="#888888" Foreground="#bbbbbb" Content="KeyboardOn" Click="xKeyboardButton_Click"       Height="45" Width="80" Canvas.Left="1165" Canvas.Top="628"/>
-        <Button Name="xSampleFileButton"    Background="#111122" BorderBrush="#888888" Foreground="#bbbbbb" Content="Normal"     Click="xSampleFileButton_Click"     Height="45" Width="80" Canvas.Left="1080" Canvas.Top="678"/>
+        <TextBox Name="xTesterTextBox"      Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Text="User" Height="20" Width="165" Canvas.Left="1080" Canvas.Top="565"/>
+        <Button Name="xSettingButton"       Background="#111111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Setting"    Click="xSettingButton_Click"        Height="45" Width="80" Canvas.Left="1250" Canvas.Top="691"/>
+        <Button Name="xTesterButton"        Background="#221111" BorderBrush="#888888" Foreground="#bbbbbb" Content="Tester"     Click="xTesterButton_Click"         Height="45" Width="80" Canvas.Left="1080" Canvas.Top="590"/>
+        <Button Name="xAlgorithmButton"     Background="#112211" BorderBrush="#888888" Foreground="#bbbbbb" Content="AGK"        Click="xAlgorithmButton_Click"      Height="45" Width="80" Canvas.Left="1080" Canvas.Top="641"/>
+        <Button Name="xPointVisibleButton"  Background="#222211" BorderBrush="#888888" Foreground="#bbbbbb" Content="Flash"      Click="xPointVisibleButton_Click"   Height="45" Width="80" Canvas.Left="1165" Canvas.Top="590"/>
+        <Button Name="xKeyboardButton"      Background="#112222" BorderBrush="#888888" Foreground="#bbbbbb" Content="KeyboardOn" Click="xKeyboardButton_Click"       Height="45" Width="80" Canvas.Left="1165" Canvas.Top="641"/>
+        <Button Name="xSampleFileButton"    Background="#111122" BorderBrush="#888888" Foreground="#bbbbbb" Content="Normal"     Click="xSampleFileButton_Click"     Height="45" Width="80" Canvas.Left="1080" Canvas.Top="691"/>
 
         <TextBlock Name="xNoticeTextBlock" Background="#eeeeee" TextWrapping="Wrap" FontFamily="Consolas" FontWeight="Bold" FontSize="60" Height="80" Width="1250" Canvas.Top="254" Canvas.Left="60" Padding="8"/>
         <RichTextBox Name="xInputRichTextBox" FontFamily="Consolas" FontSize="60" Height="76" Width="1250" Canvas.Top="358" Canvas.Left="60"/>
 
         <Label Name="xInfoLabel"  Height="192" Width="1166" Canvas.Left="60" Canvas.Top="28" FontSize="40" />
+
+        <ComboBox Name="xComboIP"  RenderTransformOrigin="36.214,24.238" Canvas.Left="1080" Canvas.Top="539" Width="165"/>
+        <Button Name="xConnectButton" Background="#111111" Foreground="#bbbbbb" BorderBrush="#888888" Content="Connect" Height="21" Width="80" Canvas.Left="1250" Canvas.Top="539" Click="xConnectButton_Click" />
     </Canvas>
 </Window>

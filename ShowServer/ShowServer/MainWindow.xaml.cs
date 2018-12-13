@@ -49,6 +49,8 @@ namespace ShowServer
         Recognition recongition = new Recognition();
         string[] candidates;
 
+        Server server;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -59,7 +61,9 @@ namespace ShowServer
             xTextEntryCanvas.Background = new ImageBrush(new BitmapImage(new Uri("../../../Image/text-entry.png", UriKind.Relative)));
             AddKeyboardUi();
             LoadSample();
-            SetupServer();
+            
+            server = new Server(this);
+            xComboIP.ItemsSource = server.ips;
         }
 
         public void Click(int x, int y)
@@ -282,7 +286,7 @@ namespace ShowServer
         void LoadSample()
         {
             StreamReader reader;
-            reader = new StreamReader(new FileStream("../../../PhraseSets/phrases-normal.txt", FileMode.Open));
+            reader = new StreamReader(new FileStream("../../../PhraseSets/phrases-simple.txt", FileMode.Open));
             while (true)
             {
                 string line = reader.ReadLine();
@@ -314,20 +318,15 @@ namespace ShowServer
             writer.WriteLine(nowTime + " " + operation);
             writer.Close();
         }
+
         void SetupServer()
         {
-            string hostName = Dns.GetHostName();
-            IPAddress[] addressList = Dns.GetHostAddresses(hostName);
-            string localIP = "127.0.0.1";
-            foreach (IPAddress ip in addressList)
-            {
-                if (ip.ToString().IndexOf("192.168.") != -1) localIP = ip.ToString();
+            /*foreach (IPAddress ip in addressList) {
+                if (ip.ToString() == "127.0.0.1") continue;
+                if (ip.ToString().IndexOf("0.") != -1) continue;
+                //if (ip.ToString().IndexOf("1") != -1) localIP = ip.ToString();
                 Console.WriteLine(ip);
-            }
-            Server server = new Server(localIP);
-            server.Listen(this);
-            MessageBox.Show("Server setup " + localIP);
-            xInputRichTextBox.Focus();
+            }*/
         }
 
         private void xSettingButton_Click(object sender, RoutedEventArgs e)
@@ -339,7 +338,16 @@ namespace ShowServer
             xKeyboardButton.Visibility = visibility;
             xAlgorithmButton.Visibility = visibility;
             xSampleFileButton.Visibility = visibility;
+            xComboIP.Visibility = visibility;
+            xConnectButton.Visibility = visibility;
         }
+
+        private void xConnectButton_Click(object sender, RoutedEventArgs e) {
+            server.Listen(xComboIP.SelectedItem.ToString());
+            MessageBox.Show("Server setup " + xComboIP.SelectedItem.ToString());
+            xInputRichTextBox.Focus();
+        }
+
         private void xTesterButton_Click(object sender, RoutedEventArgs e)
         {
             userName = xTesterTextBox.Text;
@@ -424,13 +432,21 @@ namespace ShowServer
         public TcpListener tcpListener;
         public Thread listenThread;
         public string ip;
-        public Server(string ip2)
-        {
-            ip = ip2;
-        }
-        public void Listen(MainWindow mainWindow2)
+        public List<string> ips;
+
+        public Server(MainWindow mainWindow2)
         {
             mainWindow = mainWindow2;
+            string hostName = Dns.GetHostName();
+            IPAddress[] addressList = Dns.GetHostAddresses(hostName);
+            ips = new List<string>();
+            foreach (IPAddress ip in addressList) {
+                if (ip.ToString().Split('.').Length != 4) continue;
+                ips.Add(ip.ToString());
+            }
+        }
+        public void Listen(string ip)
+        {
             tcpListener = new TcpListener(IPAddress.Parse(ip), 10309);
             listenThread = new Thread(ListenClient);
             listenThread.IsBackground = true;

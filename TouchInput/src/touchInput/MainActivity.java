@@ -52,8 +52,8 @@ public class MainActivity extends Activity {
 			if (socket == null) {
 				new NetworkAsyncTask().execute(ipEditText.getText().toString());
 				View rlayout = (View)findViewById(R.id.rlayout);
-				rlayout.setBackgroundColor(Color.parseColor("#000000"));
-				okButton.setBackgroundColor(Color.parseColor("#000000"));
+				//rlayout.setBackgroundColor(Color.parseColor("#000000"));
+				//okButton.setBackgroundColor(Color.parseColor("#000000"));
 			} else {
 				socket = null;
 				infoTextView.setText("Hello");
