@@ -23,7 +23,7 @@
         <TextBlock Name="xNoticeTextBlock" Background="#eeeeee" TextWrapping="Wrap" FontFamily="Consolas" FontWeight="Bold" FontSize="60" Height="80" Width="1250" Canvas.Top="254" Canvas.Left="60" Padding="8"/>
         <RichTextBox Name="xInputRichTextBox" FontFamily="Consolas" FontSize="60" Height="76" Width="1250" Canvas.Top="358" Canvas.Left="60"/>
 
-        <Label Name="xInfoLabel"  Height="192" Width="1166" Canvas.Left="60" Canvas.Top="28" FontSize="40" />
+        <Label Name="xInfoLabel"  Height="192" Width="1166" Canvas.Left="60" Canvas.Top="28" FontSize="40" Visibility="Hidden" />
 
         <ComboBox Name="xComboIP"  RenderTransformOrigin="36.214,24.238" Canvas.Left="1080" Canvas.Top="539" Width="165"/>
         <Button Name="xConnectButton" Background="#111111" Foreground="#bbbbbb" BorderBrush="#888888" Content="Connect" Height="21" Width="80" Canvas.Left="1250" Canvas.Top="539" Click="xConnectButton_Click" />

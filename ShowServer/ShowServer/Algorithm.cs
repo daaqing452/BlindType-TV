@@ -76,7 +76,7 @@ namespace ShowServer
         void LoadLanguageModel()
         {
             languageModel = new Dictionary<string, double>();
-            StreamReader reader = new StreamReader("../../../Model/ANC-special.txt");
+            StreamReader reader = new StreamReader("../../../Model/ANC.txt");
             while (true)
             {
                 string line = reader.ReadLine();

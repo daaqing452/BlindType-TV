@@ -5,7 +5,7 @@ to 534317
 a 492669
 in 410496
 i 347943
-that 340051
+that 170051
 it 255789
 is 228722
 for 205027
@@ -115,7 +115,7 @@ should 18933
 such 18387
 got 18373
 used 18365
-year 36670
+year 73340
 work 18198
 make 18136
 say 17774
@@ -690,7 +690,7 @@ position 3153
 medical 3140
 amount 3139
 hear 3130
-happy 6248
+happy 12496
 red 3118
 wife 3114
 church 3112
@@ -3367,7 +3367,7 @@ photos 629
 kit 629
 flying 629
 denied 629
-coding 629
+coding 314
 breaking 629
 angry 629
 plasma 628
@@ -4997,4 +4997,4 @@ intermediate 377
 hearings 377
 founder 377
 elite 377
-tsinghua 143
+tsinghua 10000
